@@ -19,3 +19,11 @@ It also links to a published 2018 UDSM Mlimani venue map. That map is historical
 
 Photo attribution and reuse:
 The page links to the sources of the displayed images. Confirm image licensing/permission before commercial or official launch. For a reliable full-campus product, collect current photographs and verified route data with UDSM permission.
+
+
+UDSM LOGO:
+The official University of Dar es Salaam emblem is displayed in the header/footer using the Wikimedia Commons file:
+https://commons.wikimedia.org/wiki/File:University_of_Dar_es_Salaam.png
+Author/source: University of Dar es Salaam (sourced from the university gallery).
+License shown on Commons: CC BY-SA 4.0. Attribution and share-alike terms apply.
+The UDSM branding manual says external users wishing to use University marks should contact the Directorate of Public Services and obtain required approval. This independent student navigation project should not imply official university endorsement. Seek UDSM approval before presenting the site as an official UDSM platform.
