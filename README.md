@@ -1,28 +1,23 @@
-# UDSM Campus Navigator Web — Initial Website
+# UDSM Campus Navigator: starter
 
-A responsive public-facing website prototype for the University of Dar es Salaam campus navigation project.
+## What is here
+- `supabase/migrations/001_schema.sql`: all 12 tables, roles (user/editor/admin), RLS, storage notes, signup trigger.
+- `lib/routing.ts`: walking router over verified pathways only; steps come from route geometry; returns `null` (no invented route) when unconnected.
+- `components/CampusMap.tsx`: Leaflet map, real GPS, tap-to-pick start, destination select, route line, steps.
+- `lib/i18n.ts`: English / Kiswahili strings.
 
-## Files
-- `index.html` — website structure
-- `styles.css` — responsive visual design
-- `script.js` — category filtering, search and navigation request demo
+## Setup
+1. `npx create-next-app@latest udsm-navigator --ts --tailwind --app`, then copy these files in.
+2. `npm i leaflet @supabase/supabase-js && npm i -D @types/leaflet`
+3. Create a Supabase project, run the SQL, copy `.env.example` to `.env.local`.
+4. Make yourself admin: `update profiles set role='admin' where id='<your auth uid>';`
+5. Load `CampusMap` with `dynamic(() => import(...), { ssr: false })`.
 
-## Run locally
-Open `index.html` in a modern browser.
+## Still to build (in this order)
+1. Verify UDSM centre, buildings and paths from the official map; enter them via the admin UI or SQL.
+2. Admin dashboard (`/admin`, server-side role check via middleware).
+3. Search with abbreviations (pg_trgm index is ready), photo gallery, correction form.
+4. PWA manifest and service worker.
 
-## Publish with GitHub Pages
-1. Upload the three files to the root of your new repository.
-2. Open repository **Settings → Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**.
-4. Choose branch `main` and folder `/ (root)`, then Save.
-5. Wait for GitHub Pages to publish the site.
-
-## Important data note
-This is a design prototype. Example images are illustrative external images, not verified UDSM photographs. Room lists, building locations, routes, floor plans and directions must be collected and verified before being presented as real navigation. No live route calculation or admin/database is included yet.
-
-## Next development phases
-1. Connect a database and secure admin roles.
-2. Add verified colleges, buildings, rooms and campus paths.
-3. Add photo upload/storage and photo metadata.
-4. Implement outdoor and indoor route guidance.
-5. Add English and Kiswahili interface content.
+## Data rule
+Nothing is seeded. Locations stay `verified=false` and `published=false` until an admin confirms them.
