@@ -1,29 +1,25 @@
-UDSM CAMPUS NAVIGATOR — PREMIUM HOMEPAGE WITH CAMPUS PHOTO REFERENCES
+UDSM CAMPUS NAVIGATOR — VERSION 2
 
-Files:
-- index.html
+FILES
+- index.html: the website homepage and interactive front-end.
 
-How to use:
-1. Upload index.html to the root of your GitHub repository.
-2. Enable GitHub Pages from Settings > Pages > Deploy from a branch > main > /(root).
-3. Open your GitHub Pages URL.
+PUBLISH / UPDATE
+1. Extract this ZIP on your phone or computer.
+2. Open your GitHub repository: udsm-campus-navigator-web.
+3. Upload the index.html file to the repository root.
+4. Choose to replace the existing index.html, then commit the change.
+5. Wait for GitHub Pages to publish, then refresh your website.
 
-This is a visual website prototype, not a complete navigation system.
-It includes public reference photos for:
-- UDSM Mlimani campus aerial view
-- Nkrumah Hall exterior
-- Nkrumah Hall interior
-- University of Dar es Salaam Library
+CURRENT FEATURES
+- Responsive mobile and desktop layout.
+- English / Kiswahili language switch.
+- Searchable sample campus directory and category filters.
+- Starting point and destination selection.
+- Route status message that clearly explains that verified step-by-step directions are not yet available.
+- External OpenStreetMap campus search link.
 
-It also links to a published 2018 UDSM Mlimani venue map. That map is historical and must be verified on site before live routing. Room-level locations, floor plans, accessible paths, and current routes have not been verified. Do not use the prototype as turn-by-turn directions.
+IMPORTANT ACCURACY NOTE
+This is a front-end prototype. It does not yet contain a verified UDSM room database, indoor floor plans, real-time positioning, or tested photo-based route instructions. The listed places are sample directory entries, not a complete official directory. Confirm every building, room, entrance and route on campus before publishing detailed directions.
 
-Photo attribution and reuse:
-The page links to the sources of the displayed images. Confirm image licensing/permission before commercial or official launch. For a reliable full-campus product, collect current photographs and verified route data with UDSM permission.
-
-
-UDSM LOGO:
-The official University of Dar es Salaam emblem is displayed in the header/footer using the Wikimedia Commons file:
-https://commons.wikimedia.org/wiki/File:University_of_Dar_es_Salaam.png
-Author/source: University of Dar es Salaam (sourced from the university gallery).
-License shown on Commons: CC BY-SA 4.0. Attribution and share-alike terms apply.
-The UDSM branding manual says external users wishing to use University marks should contact the Directorate of Public Services and obtain required approval. This independent student navigation project should not imply official university endorsement. Seek UDSM approval before presenting the site as an official UDSM platform.
+PHOTOS AND BRANDING
+The visual panels are placeholders, not real campus photographs. Replace them only with photographs you have permission to use. The project is independent and is not represented as an official University of Dar es Salaam service. Obtain permission before using official logos, branding or protected materials.
