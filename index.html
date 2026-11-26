@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#102b46">
+  <title>UDSM Campus Navigator | Explore. Discover. Navigate.</title>
+  <meta name="description" content="Explore the University of Dar es Salaam campus and find your destination with visual directions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="UDSM Campus Navigator home">
+      <span class="brand-mark">U<span>↗</span></span>
+      <span class="brand-copy"><strong>UDSM <b>NAVIGATOR</b></strong><small>CAMPUS, MADE EASY</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="#explore">Explore campus</a><a href="#navigation">Navigation</a><a href="#about">About</a>
+    </nav>
+    <div class="header-actions">
+      <button class="language-button" id="languageToggle" type="button">EN <span>⌄</span></button>
+      <a class="header-cta" href="#navigation">Find a place <span>↗</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" type="button">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-photo" role="img" aria-label="University campus landscape"></div>
+      <div class="hero-shade"></div>
+      <div class="hero-content">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR UNIVERSITY, WITHIN REACH</div>
+        <h1>Every corner of UDSM.<br><em>One clear direction.</em></h1>
+        <p>Discover campus places, explore buildings and find your destination with visual, step-by-step guidance.</p>
+        <div class="hero-search">
+          <span class="search-icon">⌕</span>
+          <input id="globalSearch" type="search" placeholder="Search colleges, buildings, rooms..." aria-label="Search campus">
+          <button id="searchButton" type="button">Search <span>→</span></button>
+        </div>
+        <div class="hero-meta"><span>◎</span> Explore the University of Dar es Salaam</div>
+      </div>
+      <div class="hero-bottom">
+        <span>EXPLORE WITH CONFIDENCE</span><span class="hero-scroll">SCROLL TO DISCOVER&nbsp; ↓</span>
+      </div>
+    </section>
+
+    <section class="quick-stats wrap" aria-label="Platform features">
+      <div><span class="stat-icon">⌖</span><strong>Explore</strong><small>Campus locations</small></div>
+      <div><span class="stat-icon">▧</span><strong>Discover</strong><small>Buildings & rooms</small></div>
+      <div><span class="stat-icon">➜</span><strong>Navigate</strong><small>Visual directions</small></div>
+      <div><span class="stat-icon">◎</span><strong>Understand</strong><small>Places before you go</small></div>
+    </section>
+
+    <section class="section wrap" id="explore">
+      <div class="section-heading">
+        <div><span class="section-kicker">EXPLORE THE UNIVERSITY</span><h2>Find your place<br><em>on campus.</em></h2></div>
+        <p>Start with a category or search for a specific destination. Explore colleges, facilities, buildings and more.</p>
+      </div>
+      <div class="category-row" id="categoryFilters">
+        <button class="filter active" data-category="all">All places</button>
+        <button class="filter" data-category="college">Colleges</button>
+        <button class="filter" data-category="learning">Learning</button>
+        <button class="filter" data-category="facilities">Facilities</button>
+        <button class="filter" data-category="residence">Accommodation</button>
+      </div>
+      <div class="place-grid" id="placeGrid">
+        <article class="place-card" data-category="college" data-search="college academic colleges">
+          <div class="place-image image-college"><span class="image-label">ACADEMIC</span></div>
+          <div class="place-info"><div class="place-type">COLLEGES & SCHOOLS</div><h3>Colleges</h3><p>Explore academic colleges, schools and their locations.</p><a href="#navigation" class="text-link" data-destination="College">Explore colleges <span>↗</span></a></div>
+        </article>
+        <article class="place-card" data-category="learning" data-search="lecture theatres classrooms rooms">
+          <div class="place-image image-lecture"><span class="image-label">LEARNING</span></div>
+          <div class="place-info"><div class="place-type">TEACHING SPACES</div><h3>Lecture rooms</h3><p>Find lecture theatres, classrooms and learning spaces.</p><a href="#navigation" class="text-link" data-destination="Lecture room">Find a room <span>↗</span></a></div>
+        </article>
+        <article class="place-card" data-category="learning" data-search="library reading study">
+          <div class="place-image image-library"><span class="image-label">STUDY</span></div>
+          <div class="place-info"><div class="place-type">RESEARCH & STUDY</div><h3>Libraries</h3><p>Locate libraries, reading areas and study facilities.</p><a href="#navigation" class="text-link" data-destination="Library">Explore libraries <span>↗</span></a></div>
+        </article>
+        <article class="place-card" data-category="facilities" data-search="administration offices services">
+          <div class="place-image image-office"><span class="image-label">SERVICES</span></div>
+          <div class="place-info"><div class="place-type">UNIVERSITY SERVICES</div><h3>Offices</h3><p>Find administrative offices and important service points.</p><a href="#navigation" class="text-link" data-destination="Office">Find an office <span>↗</span></a></div>
+        </article>
+        <article class="place-card" data-category="residence" data-search="hostels halls accommodation residence">
+          <div class="place-image image-residence"><span class="image-label">CAMPUS LIFE</span></div>
+          <div class="place-info"><div class="place-type">STUDENT LIVING</div><h3>Accommodation</h3><p>Explore student halls and accommodation locations.</p><a href="#navigation" class="text-link" data-destination="Accommodation">Explore halls <span>↗</span></a></div>
+        </article>
+        <article class="place-card" data-category="facilities" data-search="cafeteria food dining">
+          <div class="place-image image-food"><span class="image-label">CAMPUS LIFE</span></div>
+          <div class="place-info"><div class="place-type">FOOD & REFRESHMENTS</div><h3>Food & cafeterias</h3><p>Discover dining areas and places to get refreshments.</p><a href="#navigation" class="text-link" data-destination="Cafeteria">Find food <span>↗</span></a></div>
+        </article>
+      </div>
+      <div class="empty-state" id="emptyState" hidden>No matching categories found. Try another search.</div>
+      <p class="data-note"><strong>Preview notice:</strong> This is the initial website interface. Place cards and photographs are illustrative placeholders, not verified UDSM locations. Verified campus data will be added as it is collected.</p>
+    </section>
+
+    <section class="navigation-section" id="navigation">
+      <div class="wrap navigation-layout">
+        <div class="navigation-copy">
+          <span class="section-kicker light-kicker">VISUAL STEP-BY-STEP NAVIGATION</span>
+          <h2>Not just where.<br><em>Show me how.</em></h2>
+          <p>Choose where you are and where you want to go. The platform is being designed to guide visitors with real campus photos, landmarks and clear steps.</p>
+          <div class="route-form">
+            <label for="startLocation">YOUR STARTING POINT</label>
+            <div class="field"><span>●</span><input id="startLocation" placeholder="e.g. Nkrumah Hall"></div>
+            <label for="endLocation">YOUR DESTINATION</label>
+            <div class="field"><span>◎</span><input id="endLocation" placeholder="e.g. Lecture Room B-102"></div>
+            <button id="routeButton" type="button">Preview navigation concept <span>→</span></button>
+            <small id="routeMessage">Navigation will become active when verified routes and room data are added.</small>
+          </div>
+        </div>
+        <div class="visual-preview">
+          <div class="preview-top"><span>YOUR JOURNEY</span><span class="live-dot">● CONCEPT PREVIEW</span></div>
+          <div class="route-line">
+            <div class="route-step"><span class="route-number">01</span><div><strong>Identify your starting point</strong><small>Confirm where your journey begins</small></div></div>
+            <div class="route-step"><span class="route-number">02</span><div><strong>Follow the campus landmarks</strong><small>Recognise paths and building entrances</small></div></div>
+            <div class="route-step"><span class="route-number">03</span><div><strong>Find the right room</strong><small>Follow floor and corridor guidance</small></div></div>
+          </div>
+          <div class="preview-image"></div>
+          <div class="preview-caption"><span>PHOTO-BASED DIRECTIONS</span><span>01 / 03</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap about-section" id="about">
+      <div class="about-image"></div>
+      <div class="about-copy"><span class="section-kicker">MADE FOR THE UDSM COMMUNITY</span><h2>Campus life,<br><em>made easier.</em></h2><p>Whether you are a student, lecturer, parent, guest or first-time visitor, the goal is to help you understand the campus and reach the place you need.</p><div class="about-points"><span>✓ Students & lecturers</span><span>✓ Visitors & guests</span><span>✓ Room and building discovery</span></div></div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="wrap footer-inner"><a class="brand footer-brand" href="#"><span class="brand-mark">U<span>↗</span></span><span class="brand-copy"><strong>UDSM <b>NAVIGATOR</b></strong><small>CAMPUS, MADE EASY</small></span></a><span>Independent campus navigation project · Initial concept</span><a href="#top">Back to top ↑</a></div></footer>
+  <script src="script.js"></script>
+</body>
+</html>
