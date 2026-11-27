@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="sw">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UDSM Campus Navigator | Admin</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{--navy:#102b46;--blue:#1769aa;--gold:#f2b544;--bg:#f3f6fa;--ink:#172b3a;--muted:#607386;--line:#dce5ed;--white:#fff;--green:#16794b;--red:#b42318}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    header{background:linear-gradient(120deg,#102b46,#1769aa);color:white;padding:24px 18px}
+    .wrap{max-width:1100px;margin:auto;padding:0 16px} .brand{display:flex;align-items:center;gap:14px}
+    .mark{width:52px;height:52px;border-radius:14px;background:#fff;color:var(--navy);display:grid;place-items:center;font-weight:900;font-size:19px}
+    h1{font-size:clamp(22px,4vw,32px);margin:0} header p{margin:5px 0 0;color:#e1efff}
+    main{max-width:1100px;margin:22px auto;padding:0 16px 50px}
+    .card{background:white;border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:18px;box-shadow:0 5px 18px #17324d0a}
+    h2{margin:0 0 14px;font-size:22px;color:var(--navy)} h3{margin:0 0 10px;font-size:18px}
+    .muted{color:var(--muted);font-size:15px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    label{display:block;font-weight:650;margin:0 0 6px} input,select,textarea{width:100%;padding:13px 14px;border:1px solid #b9c8d6;border-radius:10px;font:inherit;background:white;color:var(--ink)}
+    textarea{min-height:90px;resize:vertical}.field{min-width:0}.full{grid-column:1/-1}
+    button{border:0;border-radius:10px;padding:13px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--blue);color:white}
+    button.secondary{background:#eaf1f7;color:var(--navy);border:1px solid var(--line)}button.danger{background:#fff0ef;color:var(--red);border:1px solid #ffd3cf}
+    button:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .notice{padding:13px 15px;border-radius:10px;background:#eef6ff;border:1px solid #cfe3f7;color:#17456b;margin:12px 0}
+    .status{margin-top:12px;padding:12px 14px;border-radius:10px;display:none;white-space:pre-wrap}.status.ok{display:block;background:#eaf7ef;color:#145c38}.status.err{display:block;background:#fff0ef;color:#9b1c13}
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .place{border:1px solid var(--line);border-radius:12px;padding:15px;margin-top:12px;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+    .place strong{display:block;color:var(--navy)}.tag{display:inline-block;background:#edf3f8;color:#36536b;border-radius:20px;padding:3px 9px;font-size:13px;margin:5px 5px 0 0}
+    .hidden{display:none!important}.small{font-size:14px}.footer{text-align:center;color:var(--muted);font-size:13px;padding:12px}
+    @media(max-width:700px){.grid{grid-template-columns:1fr}.card{padding:17px}.place{display:block}.place .actions{margin-top:10px}}
+  </style>
+</head>
+<body>
+<header><div class="wrap brand"><div class="mark">UDSM</div><div><h1>UDSM Campus Navigator</h1><p>Paneli ya usimamizi wa maeneo ya chuo</p></div></div></header>
+<main>
+  <section id="loginCard" class="card">
+    <h2>Ingia kama msimamizi</h2>
+    <p class="muted">Tumia akaunti ya Supabase ambayo imepewa role ya <b>admin</b>.</p>
+    <div class="grid">
+      <div class="field full"><label for="email">Barua pepe</label><input id="email" type="email" autocomplete="username" placeholder="Weka barua pepe yako"></div>
+      <div class="field full"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Weka password yako"></div>
+    </div>
+    <div class="actions"><button id="loginBtn">Ingia</button></div>
+    <div id="loginStatus" class="status"></div>
+  </section>
+
+  <section id="adminArea" class="hidden">
+    <div class="card">
+      <div class="topline"><div><h2>Karibu kwenye Admin Panel</h2><p class="muted">Ongeza na simamia maeneo yanayoonekana kwenye navigator.</p></div><button class="secondary" id="logoutBtn">Toka</button></div>
+      <div class="notice">Maeneo yataonekana kwa watumiaji pale tu yatakapowekwa <b>Published</b> na <b>Verified</b>, kulingana na sera za database.</div>
+    </div>
+    <section class="card">
+      <h2 id="formTitle">Ongeza eneo jipya</h2>
+      <form id="placeForm">
+        <input type="hidden" id="placeId">
+        <div class="grid">
+          <div class="field"><label for="name_sw">Jina la eneo (Kiswahili) *</label><input id="name_sw" required placeholder="Mfano: Maktaba Kuu"></div>
+          <div class="field"><label for="name_en">Place name (English)</label><input id="name_en" placeholder="Example: Main Library"></div>
+          <div class="field"><label for="place_type">Aina ya eneo *</label><select id="place_type" required>
+            <option value="">Chagua aina</option><option value="building">Jengo</option><option value="lecture_room">Lecture room</option><option value="office">Ofisi</option><option value="department">Idara</option><option value="library">Maktaba</option><option value="hostel">Hosteli</option><option value="service">Huduma</option><option value="landmark">Alama ya eneo</option><option value="other">Nyingine</option>
+          </select></div>
+          <div class="field"><label for="parent_id">Jengo mama / Parent ID (hiari)</label><input id="parent_id" placeholder="UUID ya jengo mama"></div>
+          <div class="field"><label for="building_code">Building code</label><input id="building_code" placeholder="Mfano: CLB"></div>
+          <div class="field"><label for="room_code">Room number / code</label><input id="room_code" placeholder="Mfano: LT-01"></div>
+          <div class="field"><label for="floor_name">Ghorofa / Floor</label><input id="floor_name" placeholder="Mfano: Ground floor"></div>
+          <div class="field"><label for="photo_url">Picha URL (hiari)</label><input id="photo_url" type="url" placeholder="https://..."></div>
+          <div class="field"><label for="latitude">Latitude</label><input id="latitude" type="number" step="any" placeholder="-6.7..."></div>
+          <div class="field"><label for="longitude">Longitude</label><input id="longitude" type="number" step="any" placeholder="39.2..."></div>
+          <div class="field full"><label for="description_sw">Maelezo (Kiswahili)</label><textarea id="description_sw" placeholder="Eleza eneo hili na huduma zake"></textarea></div>
+          <div class="field full"><label for="description_en">Description (English)</label><textarea id="description_en" placeholder="Describe this place"></textarea></div>
+          <div class="field"><label for="status">Hali ya uchapishaji</label><select id="status"><option value="draft">Draft — haijaonekana kwa umma</option><option value="published">Published — ichapishwe</option></select></div>
+          <div class="field"><label for="is_verified">Uthibitisho</label><select id="is_verified"><option value="false">Haijathibitishwa</option><option value="true">Imethibitishwa</option></select></div>
+        </div>
+        <div class="actions"><button type="submit" id="saveBtn">Hifadhi eneo</button><button type="button" class="secondary" id="resetBtn">Safisha fomu</button></div>
+        <div id="formStatus" class="status"></div>
+      </form>
+    </section>
+    <section class="card">
+      <div class="topline"><div><h2>Maeneo yaliyopo</h2><p class="muted">Orodha ya maeneo kwenye database.</p></div><button class="secondary" id="refreshBtn">Onyesha upya</button></div>
+      <div id="placesList"><p class="muted">Inapakia maeneo...</p></div>
+      <div id="listStatus" class="status"></div>
+    </section>
+  </section>
+  <p class="footer">Mradi huu ni prototype huru ya majaribio; si tovuti rasmi ya UDSM wala hauwakilishi idhini ya UDSM.</p>
+</main>
+<script>
+  // Project URL na Publishable Key zilizowekwa kwa ajili ya kuunganisha Supabase.
+  // Publishable key ni ya matumizi ya frontend; usiweke Secret/service_role key hapa.
+  const SUPABASE_URL = 'https://cjilftgrqtigaxykkakj.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_fnnqvP12L8Tim_sQGxYUmg_JqNXkWtV';
+
+  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  const $ = (id) => document.getElementById(id);
+  let currentUser = null;
+
+  function showStatus(id, message, good=false) {
+    const el=$(id); el.textContent=message; el.className='status '+(good?'ok':'err');
+  }
+  function clearStatus(id){const el=$(id);el.textContent='';el.className='status';}
+  function value(id){const v=$(id).value.trim();return v===''?null:v;}
+  function setLoggedIn(on){
+    $('loginCard').classList.toggle('hidden',on);
+    $('adminArea').classList.toggle('hidden',!on);
+  }
+  async function verifyAdmin(user){
+    const {data,error}=await client.from('profiles').select('role,full_name').eq('user_id',user.id).maybeSingle();
+    if(error) throw error;
+    if(!data || data.role!=='admin') throw new Error('Akaunti hii haina role ya admin kwenye public.profiles.');
+    currentUser=user; setLoggedIn(true); await loadPlaces();
+  }
+  $('loginBtn').addEventListener('click',async()=>{
+    clearStatus('loginStatus'); $('loginBtn').disabled=true;
+    try{
+      const {data,error}=await client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+      if(error) throw error;
+      await verifyAdmin(data.user);
+      showStatus('listStatus','Umeingia kikamilifu.',true);
+    }catch(e){showStatus('loginStatus',e.message||'Imeshindikana kuingia. Hakiki taarifa zako na mipangilio ya Supabase.');}
+    finally{$('loginBtn').disabled=false;}
+  });
+  $('logoutBtn').addEventListener('click',async()=>{await client.auth.signOut();currentUser=null;setLoggedIn(false);});
+  $('resetBtn').addEventListener('click',resetForm);
+  $('refreshBtn').addEventListener('click',loadPlaces);
+
+  function resetForm(){
+    $('placeForm').reset();$('placeId').value='';$('formTitle').textContent='Ongeza eneo jipya';$('saveBtn').textContent='Hifadhi eneo';clearStatus('formStatus');
+  }
+  $('placeForm').addEventListener('submit',async(e)=>{
+    e.preventDefault();clearStatus('formStatus');$('saveBtn').disabled=true;
+    const payload={
+      name_sw:value('name_sw'),name_en:value('name_en'),place_type:value('place_type'),
+      parent_id:value('parent_id'),building_code:value('building_code'),room_code:value('room_code'),
+      floor_name:value('floor_name'),photo_url:value('photo_url'),
+      latitude:value('latitude')===null?null:Number(value('latitude')),
+      longitude:value('longitude')===null?null:Number(value('longitude')),
+      description_sw:value('description_sw'),description_en:value('description_en'),
+      status:value('status'),is_verified:$('is_verified').value==='true'
+    };
+    try{
+      const id=value('placeId'); let result;
+      if(id){
+        result=await client.from('campus_places').update(payload).eq('id',id).select().single();
+      }else{
+        payload.created_by=currentUser.id;
+        result=await client.from('campus_places').insert(payload).select().single();
+      }
+      if(result.error) throw result.error;
+      showStatus('formStatus',id?'Mabadiliko yamehifadhiwa.':'Eneo limeongezwa kikamilifu.',true);
+      resetForm();await loadPlaces();
+    }catch(err){showStatus('formStatus',err.message||'Imeshindikana kuhifadhi eneo.');}
+    finally{$('saveBtn').disabled=false;}
+  });
+
+  async function loadPlaces(){
+    $('placesList').innerHTML='<p class="muted">Inapakia...</p>';clearStatus('listStatus');
+    const {data,error}=await client.from('campus_places').select('*').order('created_at',{ascending:false}).limit(200);
+    if(error){$('placesList').innerHTML='';showStatus('listStatus',error.message);return;}
+    if(!data || !data.length){$('placesList').innerHTML='<p class="muted">Bado hakuna maeneo yaliyoongezwa.</p>';return;}
+    $('placesList').innerHTML='';
+    data.forEach(p=>{
+      const item=document.createElement('article');item.className='place';
+      const info=document.createElement('div');const title=document.createElement('strong');
+      title.textContent=p.name_sw||p.name_en||'Eneo bila jina';info.appendChild(title);
+      const sub=document.createElement('div');sub.className='small muted';
+      sub.textContent=[p.name_en,p.building_code,p.room_code,p.floor_name].filter(Boolean).join(' • ');info.appendChild(sub);
+      const tags=document.createElement('div');
+      [p.place_type,p.status,p.is_verified?'Verified':'Not verified'].forEach(t=>{if(t){const span=document.createElement('span');span.className='tag';span.textContent=t;tags.appendChild(span);}});
+      info.appendChild(tags);item.appendChild(info);
+      const actions=document.createElement('div');actions.className='actions';
+      const edit=document.createElement('button');edit.className='secondary';edit.textContent='Hariri';edit.addEventListener('click',()=>editPlace(p));
+      const del=document.createElement('button');del.className='danger';del.textContent='Futa';del.addEventListener('click',()=>deletePlace(p.id,p.name_sw||p.name_en||'eneo hili'));
+      actions.append(edit,del);item.appendChild(actions);$('placesList').appendChild(item);
+    });
+  }
+  function editPlace(p){
+    const fields=['name_sw','name_en','place_type','parent_id','building_code','room_code','floor_name','photo_url','latitude','longitude','description_sw','description_en','status'];
+    fields.forEach(k=>$(k).value=p[k]??'');
+    $('is_verified').value=p.is_verified?'true':'false';$('placeId').value=p.id;
+    $('formTitle').textContent='Hariri eneo';$('saveBtn').textContent='Hifadhi mabadiliko';clearStatus('formStatus');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  async function deletePlace(id,name){
+    if(!confirm('Una uhakika unataka kufuta '+name+'?'))return;
+    const {error}=await client.from('campus_places').delete().eq('id',id);
+    if(error){showStatus('listStatus',error.message);return;}
+    showStatus('listStatus','Eneo limefutwa.',true);await loadPlaces();
+  }
+
+  client.auth.getSession().then(async({data})=>{
+    if(data.session){try{await verifyAdmin(data.session.user);}catch(e){await client.auth.signOut();setLoggedIn(false);showStatus('loginStatus',e.message);}}
+  });
+</script>
+</body>
+</html>
