@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#092b55">
+  <title>UDSM Campus Navigator | Campus wayfinding concept</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="proposal-bar">INDEPENDENT PROJECT PROPOSAL · NOT AN OFFICIAL UDSM SERVICE</div>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="UDSM Campus Navigator home">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/University_of_Dar_es_Salaam.png" alt="University of Dar es Salaam emblem">
+      <span><strong>UDSM CAMPUS</strong><b>NAVIGATOR</b><small>Find your way with confidence</small></span>
+    </a>
+    <nav><a href="#explore">Explore</a><a href="#how">How it works</a><a href="#about">About</a></nav>
+    <button class="lang" id="langBtn">Kiswahili</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span> CAMPUS WAYFINDING CONCEPT</div>
+        <h1 id="heroTitle">Your campus.<br><em>One clear direction.</em></h1>
+        <p id="heroText">Search for a building, lecture room, office or campus service and plan how to get there.</p>
+        <a class="primary-link" href="#explore">Start exploring <span>↗</span></a>
+        <div class="hero-note"><span>✦</span> Designed for students, staff and campus visitors</div>
+      </div>
+      <div class="hero-art">
+        <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+        <div class="art-card">
+          <div class="art-top"><span>UDSM CAMPUS</span><span class="live-dot">● CONCEPT MAP</span></div>
+          <div class="mini-map">
+            <div class="road road-a"></div><div class="road road-b"></div><div class="road road-c"></div>
+            <div class="green green-a"></div><div class="green green-b"></div>
+            <div class="pin pin-a">A</div><div class="pin pin-b">B</div><div class="route-dash"></div>
+          </div>
+          <div class="art-bottom"><span>01 <small>ORIGIN</small></span><span>02 <small>DESTINATION</small></span><span>03 <small>ROUTE</small></span></div>
+        </div>
+        <div class="floating-tag"><span>⌖</span> Find your destination</div>
+      </div>
+    </section>
+
+    <section class="finder" id="explore">
+      <div class="section-heading"><div><div class="eyebrow">PLAN YOUR JOURNEY</div><h2>Where do you want to go?</h2></div><span class="step-pill">01 — 03</span></div>
+      <div class="search-grid">
+        <label class="field"><span class="field-label"><i class="origin-icon"></i> ORIGIN · WHERE AM I?</span><input id="originInput" placeholder="Enter starting point or use GPS"><button id="gpsBtn" class="gps-btn">◎ Use my location</button></label>
+        <div class="swap">→</div>
+        <label class="field"><span class="field-label"><i class="destination-icon"></i> DESTINATION · WHERE TO?</span><input id="destinationInput" placeholder="Building, room, office or service"><small>Search is a prototype; campus directory data will be added after verification.</small></label>
+        <button id="showRouteBtn" class="find-btn">Preview route <span>↗</span></button>
+      </div>
+      <div id="status" class="status" role="status">Enter a starting point and destination, or use GPS to set your origin.</div>
+    </section>
+
+    <section class="map-section">
+      <div class="section-heading map-heading"><div><div class="eyebrow">LIVE MAP EXPERIENCE</div><h2>See your journey</h2></div><div class="map-legend"><span><i class="legend-origin"></i> Origin</span><span><i class="legend-destination"></i> Destination</span></div></div>
+      <div class="map-layout">
+        <div id="map" aria-label="Interactive map"></div>
+        <aside class="route-panel">
+          <div class="panel-head"><span class="panel-icon">⌖</span><div><b>Route details</b><small>Journey overview</small></div></div>
+          <div class="route-stat"><strong id="distance">—</strong><small>Distance preview</small></div>
+          <div class="route-stat"><strong id="duration">—</strong><small>Estimated walk</small></div>
+          <div class="route-line"><span class="line-dot start"></span><div><small>START</small><b id="originSummary">Not selected</b></div></div>
+          <div class="route-line"><span class="line-dot end"></span><div><small>DESTINATION</small><b id="destinationSummary">Not selected</b></div></div>
+          <div class="notice"><b>Prototype limitation</b><p>The line is a visual preview, not a verified pedestrian route. Accurate paths, distances and turn-by-turn steps will be enabled after campus paths are surveyed and validated.</p></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="features" id="how">
+      <div class="section-heading"><div><div class="eyebrow">BUILT AROUND YOUR JOURNEY</div><h2>From campus entrance to room door</h2></div></div>
+      <div class="feature-grid">
+        <article class="feature"><div class="feature-icon blue">⌖</div><h3>Origin & GPS</h3><p>Set your starting point manually or share your device location outdoors.</p><span>01 / POSITION</span></article>
+        <article class="feature"><div class="feature-icon orange">⌕</div><h3>Smart destination search</h3><p>Find buildings, lecture rooms, offices, hostels and campus services.</p><span>02 / DISCOVERY</span></article>
+        <article class="feature"><div class="feature-icon green">↗</div><h3>Walking directions</h3><p>View paths, distance, estimated time and clear navigation steps once verified.</p><span>03 / ROUTING</span></article>
+        <article class="feature"><div class="feature-icon purple">▦</div><h3>Indoor navigation</h3><p>Explore verified floors, corridors, entrances and room numbers inside buildings.</p><span>04 / INDOORS</span></article>
+      </div>
+    </section>
+
+    <section class="indoor" id="about">
+      <div><div class="eyebrow">INDOOR WAYFINDING</div><h2>Know which floor.<br><em>Find the right room.</em></h2><p>Indoor directions will use verified building plans, floor levels, corridors, entrances and room labels. Indoor GPS alone cannot reliably identify an exact room.</p><div class="indoor-tags"><span>Floor plans</span><span>Room directory</span><span>Verified corridors</span></div></div>
+      <div class="floor-card"><div class="floor-top"><b>BUILDING DIRECTORY</b><span>FLOOR VIEW · CONCEPT</span></div><div class="floor-plan"><div class="room room-one">ROOM 01</div><div class="room room-two">ROOM 02</div><div class="corridor">CORRIDOR</div><div class="room room-three">ROOM 03</div><div class="room room-four">ROOM 04</div><div class="floor-pin">YOU</div></div><div class="floor-bottom">Illustrative floor layout — not an actual UDSM building plan.</div></div>
+    </section>
+  </main>
+
+  <footer><div class="footer-brand">UDSM CAMPUS NAVIGATOR</div><p>Independent student project concept for discussion with the University of Dar es Salaam. Not an official university service or endorsement.</p><div class="credits">Emblem source: University of Dar es Salaam, via Wikimedia Commons · CC BY-SA 4.0. Map data © OpenStreetMap contributors.</div></footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
