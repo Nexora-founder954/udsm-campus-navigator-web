@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="sw">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b46">
+  <title>UDSM Campus Navigator | Admin</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{--navy:#102b46;--blue:#1769aa;--gold:#e3ad43;--bg:#f3f6fa;--ink:#172638;--muted:#65758a;--line:#dce4ed;--white:#fff;--green:#16845b;--red:#b42318}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    header{background:linear-gradient(120deg,#102b46,#174d78);color:#fff;padding:22px max(18px,calc((100% - 1100px)/2));border-bottom:4px solid var(--gold)}
+    header strong{font-size:20px;letter-spacing:.2px}header p{margin:4px 0 0;color:#d9e7f3}
+    main{max-width:1100px;margin:24px auto;padding:0 16px 50px}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 5px 18px #102b460d}
+    h1,h2{margin:0 0 12px}h1{font-size:23px}h2{font-size:19px}.muted{color:var(--muted)}.small{font-size:13px}
+    label{display:block;font-weight:650;margin:12px 0 5px}input,select,textarea{width:100%;padding:12px;border:1px solid #cbd6e2;border-radius:9px;font:inherit;background:#fff;color:var(--ink)}
+    textarea{min-height:82px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
+    button{border:0;border-radius:9px;padding:12px 17px;background:var(--blue);color:#fff;font-weight:700;font:inherit;cursor:pointer;margin-top:14px}
+    button.secondary{background:#e8eef5;color:var(--navy)}button.danger{background:#fff0ef;color:var(--red)}
+    button:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    #status{padding:11px 13px;border-radius:9px;background:#edf3f9;color:var(--navy);margin:12px 0;white-space:pre-wrap}
+    #status.error{background:#fff0ef;color:var(--red)}#status.ok{background:#eaf7f0;color:var(--green)}
+    .hidden{display:none!important}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:650px}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#f7f9fc}
+    .pill{display:inline-block;padding:3px 8px;border-radius:99px;background:#edf3f9;font-size:12px}
+    footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+    @media(max-width:650px){.grid{grid-template-columns:1fr}.panel{padding:16px}header{padding:18px}}
+  </style>
+</head>
+<body>
+<header>
+  <strong>UDSM CAMPUS NAVIGATOR</strong>
+  <p>Admin Dashboard · Usimamizi wa taarifa za maeneo ya chuo</p>
+</header>
+<main>
+  <section class="panel" id="setupNotice">
+    <h1>Muunganisho wa Supabase</h1>
+    <p class="muted">Kabla ya kutumia ukurasa huu, jaza Project URL na Publishable key kwenye sehemu ya CONFIG ndani ya faili hili.</p>
+    <p class="small">Tumia Publishable key pekee. Usiweke kamwe service_role key au secret key kwenye faili la tovuti.</p>
+  </section>
+
+  <section class="panel" id="loginPanel">
+    <h1>Ingia kama msimamizi</h1>
+    <p class="muted">Tumia akaunti ya Admin uliyounda kwenye Supabase Authentication.</p>
+    <form id="loginForm">
+      <label for="email">Barua pepe</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button id="loginBtn" type="submit">Ingia</button>
+    </form>
+    <div id="loginStatus" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="hidden" id="adminPanel">
+    <div class="panel">
+      <div class="actions" style="justify-content:space-between">
+        <div><h1>Karibu, Admin</h1><p class="muted" style="margin:0">Ongeza na simamia maeneo ya UDSM.</p></div>
+        <button class="secondary" id="logoutBtn" type="button">Toka</button>
+      </div>
+      <div id="status" role="status" aria-live="polite">Inapakia taarifa...</div>
+    </div>
+
+    <section class="panel">
+      <h2 id="formTitle">Ongeza eneo jipya</h2>
+      <form id="placeForm">
+        <div class="grid">
+          <div><label for="name_en">Jina la eneo (English) *</label><input id="name_en" required maxlength="160" placeholder="e.g. College of Business Education"></div>
+          <div><label for="name_sw">Jina la eneo (Kiswahili)</label><input id="name_sw" maxlength="160" placeholder="Jina kwa Kiswahili"></div>
+          <div><label for="place_type">Aina ya eneo *</label>
+            <select id="place_type" required>
+              <option value="college">College</option><option value="faculty">Faculty</option><option value="building">Building / Jengo</option>
+              <option value="room">Room / Chumba</option><option value="hostel">Hostel</option><option value="cafeteria">Cafeteria</option>
+              <option value="library">Library</option><option value="office">Office</option><option value="service">Service</option>
+              <option value="landmark">Landmark</option><option value="other">Other</option>
+            </select>
+          </div>
+          <div><label for="parent_id">Parent place ID (optional)</label><input id="parent_id" placeholder="UUID ya jengo/kitengo mama"></div>
+          <div><label for="building_code">Building code</label><input id="building_code" maxlength="40"></div>
+          <div><label for="room_code">Room code</label><input id="room_code" maxlength="40"></div>
+          <div><label for="floor_name">Floor</label><input id="floor_name" maxlength="40" placeholder="Ground floor, 1st floor..."></div>
+          <div><label for="photo_url">Photo URL (optional)</label><input id="photo_url" type="url" placeholder="https://..."></div>
+          <div><label for="latitude">Latitude</label><input id="latitude" type="number" step="any" placeholder="-6.7..."></div>
+          <div><label for="longitude">Longitude</label><input id="longitude" type="number" step="any" placeholder="39.2..."></div>
+        </div>
+        <label for="description_en">Maelezo (English)</label><textarea id="description_en"></textarea>
+        <label for="description_sw">Maelezo (Kiswahili)</label><textarea id="description_sw"></textarea>
+        <div class="grid">
+          <div><label for="statusSelect">Hali ya taarifa</label><select id="statusSelect"><option value="draft">Draft (haijaonekana kwa umma)</option><option value="published">Published (ichapishwe baada ya kuhakikiwa)</option></select></div>
+          <div><label for="verified">Uhakiki</label><select id="verified"><option value="false">Haijahakikiwa</option><option value="true">Imethibitishwa</option></select></div>
+        </div>
+        <div class="actions">
+          <button id="saveBtn" type="submit">Hifadhi eneo</button>
+          <button class="secondary hidden" id="cancelEditBtn" type="button">Acha kuhariri</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="actions" style="justify-content:space-between">
+        <div><h2>Maeneo yaliyohifadhiwa</h2><p class="muted small">Orodha ya maeneo yaliyopo kwenye hifadhidata.</p></div>
+        <button class="secondary" id="refreshBtn" type="button">Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Jina</th><th>Aina</th><th>Hali</th><th>Uhakiki</th><th>Vitendo</th></tr></thead><tbody id="placesBody"><tr><td colspan="5">Hakuna taarifa zilizopakiwa bado.</td></tr></tbody></table>
+      </div>
+    </section>
+  </section>
+</main>
+<footer>UDSM Campus Navigator ni mradi huru wa mfano; si huduma rasmi ya UDSM bila idhini ya chuo.</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  // CONFIG: Badilisha thamani hizi mbili kwa taarifa za project yako ya Supabase.
+  const SUPABASE_URL = 'WEKA_PROJECT_URL_HAPA';
+  const SUPABASE_PUBLISHABLE_KEY = 'WEKA_PUBLISHABLE_KEY_HAPA';
+
+  const $ = (id) => document.getElementById(id);
+  const loginPanel = $('loginPanel');
+  const adminPanel = $('adminPanel');
+  const loginStatus = $('loginStatus');
+  const statusBox = $('status');
+  let supabase = null;
+  let editingId = null;
+
+  function showStatus(message, type = '') {
+    statusBox.textContent = message;
+    statusBox.className = type;
+  }
+  function showLoginMessage(message, isError = true) {
+    loginStatus.textContent = message;
+    loginStatus.style.color = isError ? '#b42318' : '#16845b';
+  }
+  function configReady() {
+    return SUPABASE_URL.startsWith('https://') &&
+      !SUPABASE_URL.includes('WEKA_') &&
+      SUPABASE_PUBLISHABLE_KEY &&
+      !SUPABASE_PUBLISHABLE_KEY.includes('WEKA_');
+  }
+  if (!window.supabase || !window.supabase.createClient) {
+    showLoginMessage('Supabase library haijapakia. Hakikisha intaneti ipo kisha refresh.');
+    $('loginBtn').disabled = true;
+    return;
+  }
+  if (!configReady()) {
+    showLoginMessage('Bado hujaweka Project URL na Publishable key kwenye CONFIG ndani ya admin.html.');
+    $('loginBtn').disabled = true;
+    return;
+  }
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+  async function checkAdmin() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+      loginPanel.classList.remove('hidden');
+      adminPanel.classList.add('hidden');
+      return;
+    }
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles').select('role, full_name').eq('user_id', user.id).maybeSingle();
+    if (profileError || !profile || profile.role !== 'admin') {
+      await supabase.auth.signOut();
+      showLoginMessage('Akaunti hii haina ruhusa ya Admin. Hakikisha role yako ni admin kwenye public.profiles.');
+      loginPanel.classList.remove('hidden');
+      adminPanel.classList.add('hidden');
+      return;
+    }
+    loginPanel.classList.add('hidden');
+    adminPanel.classList.remove('hidden');
+    showStatus('Umeingia kama Admin. Unaweza kusimamia maeneo.', 'ok');
+    await loadPlaces();
+  }
+
+  $('loginForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    $('loginBtn').disabled = true;
+    showLoginMessage('Inaingia...');
+    const { error } = await supabase.auth.signInWithPassword({
+      email: $('email').value.trim(),
+      password: $('password').value
+    });
+    $('loginBtn').disabled = false;
+    if (error) return showLoginMessage('Imeshindikana kuingia: ' + error.message);
+    $('password').value = '';
+    await checkAdmin();
+  });
+
+  $('logoutBtn').addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    editingId = null;
+    $('placeForm').reset();
+    await checkAdmin();
+    showLoginMessage('Umetoka kwenye akaunti.', false);
+  });
+
+  function getOptionalNumber(id) {
+    const value = $(id).value.trim();
+    return value === '' ? null : Number(value);
+  }
+  function resetEditor() {
+    editingId = null;
+    $('placeForm').reset();
+    $('formTitle').textContent = 'Ongeza eneo jipya';
+    $('saveBtn').textContent = 'Hifadhi eneo';
+    $('cancelEditBtn').classList.add('hidden');
+  }
+
+  $('placeForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const { data: { user } } = await supabase.auth.getUser();
+    const payload = {
+      name_en: $('name_en').value.trim(),
+      name_sw: $('name_sw').value.trim() || null,
+      place_type: $('place_type').value,
+      parent_id: $('parent_id').value.trim() || null,
+      building_code: $('building_code').value.trim() || null,
+      room_code: $('room_code').value.trim() || null,
+      floor_name: $('floor_name').value.trim() || null,
+      photo_url: $('photo_url').value.trim() || null,
+      latitude: getOptionalNumber('latitude'),
+      longitude: getOptionalNumber('longitude'),
+      description_en: $('description_en').value.trim() || null,
+      description_sw: $('description_sw').value.trim() || null,
+      status: $('statusSelect').value,
+      is_verified: $('verified').value === 'true',
+      created_by: user ? user.id : null
+    };
+    if ((payload.latitude === null) !== (payload.longitude === null)) {
+      return showStatus('Weka latitude na longitude zote mbili, au acha zote wazi.', 'error');
+    }
+    if (payload.latitude !== null &&
+      (payload.latitude < -90 || payload.latitude > 90 || payload.longitude < -180 || payload.longitude > 180)) {
+      return showStatus('Coordinates ulizoingiza haziko kwenye mipaka sahihi.', 'error');
+    }
+    $('saveBtn').disabled = true;
+    const result = editingId
+      ? await supabase.from('campus_places').update(payload).eq('id', editingId)
+      : await supabase.from('campus_places').insert(payload);
+    $('saveBtn').disabled = false;
+    if (result.error) return showStatus('Imeshindikana kuhifadhi: ' + result.error.message, 'error');
+    showStatus(editingId ? 'Mabadiliko yamehifadhiwa.' : 'Eneo limehifadhiwa.', 'ok');
+    resetEditor();
+    await loadPlaces();
+  });
+
+  async function loadPlaces() {
+    showStatus('Inapakia maeneo...', '');
+    const { data, error } = await supabase.from('campus_places')
+      .select('id,name_en,name_sw,place_type,status,is_verified,building_code,room_code')
+      .order('created_at', { ascending: false }).limit(200);
+    if (error) return showStatus('Imeshindikana kusoma maeneo: ' + error.message, 'error');
+    const body = $('placesBody');
+    body.replaceChildren();
+    if (!data || !data.length) {
+      const row = document.createElement('tr');
+      const cell = document.createElement('td'); cell.colSpan = 5;
+      cell.textContent = 'Bado hakuna maeneo. Tumia fomu hapo juu kuongeza eneo la kwanza.';
+      row.appendChild(cell); body.appendChild(row);
+    } else {
+      data.forEach((place) => {
+        const row = document.createElement('tr');
+        const name = document.createElement('td');
+        name.textContent = place.name_en + (place.name_sw ? ' / ' + place.name_sw : '');
+        if (place.building_code || place.room_code) {
+          const small = document.createElement('div'); small.className = 'muted small';
+          small.textContent = [place.building_code, place.room_code].filter(Boolean).join(' · ');
+          name.appendChild(small);
+        }
+        const type = document.createElement('td'); type.textContent = place.place_type;
+        const state = document.createElement('td'); state.textContent = place.status;
+        const verified = document.createElement('td'); verified.textContent = place.is_verified ? 'Imethibitishwa' : 'Bado';
+        const actions = document.createElement('td');
+        const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'secondary'; edit.textContent = 'Hariri'; edit.style.margin = '0 6px 0 0';
+        edit.addEventListener('click', () => editPlace(place.id));
+        const del = document.createElement('button'); del.type = 'button'; del.className = 'danger'; del.textContent = 'Futa'; del.style.margin = '0';
+        del.addEventListener('click', () => deletePlace(place.id, place.name_en));
+        actions.append(edit, del);
+        row.append(name, type, state, verified, actions);
+        body.appendChild(row);
+      });
+    }
+    showStatus('Maeneo ' + (data ? data.length : 0) + ' yamepakiwa.', 'ok');
+  }
+
+  async function editPlace(id) {
+    const { data, error } = await supabase.from('campus_places').select('*').eq('id', id).single();
+    if (error) return showStatus('Imeshindikana kufungua eneo: ' + error.message, 'error');
+    editingId = id;
+    const fields = ['name_en','name_sw','place_type','parent_id','building_code','room_code','floor_name','photo_url','latitude','longitude','description_en','description_sw'];
+    fields.forEach((field) => $(field).value = data[field] == null ? '' : data[field]);
+    $('statusSelect').value = data.status || 'draft';
+    $('verified').value = data.is_verified ? 'true' : 'false';
+    $('formTitle').textContent = 'Hariri eneo';
+    $('saveBtn').textContent = 'Hifadhi mabadiliko';
+    $('cancelEditBtn').classList.remove('hidden');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  async function deletePlace(id, name) {
+    if (!window.confirm('Una uhakika unataka kufuta eneo: ' + name + '?')) return;
+    const { error } = await supabase.from('campus_places').delete().eq('id', id);
+    if (error) return showStatus('Imeshindikana kufuta: ' + error.message, 'error');
+    showStatus('Eneo limefutwa.', 'ok');
+    await loadPlaces();
+  }
+
+  $('cancelEditBtn').addEventListener('click', resetEditor);
+  $('refreshBtn').addEventListener('click', loadPlaces);
+  supabase.auth.onAuthStateChange(() => { setTimeout(checkAdmin, 0); });
+  checkAdmin();
+})();
+</script>
+</body>
+</html>
