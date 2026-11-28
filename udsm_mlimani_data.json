@@ -1,0 +1,101 @@
+[
+  {
+    "id": "new-library",
+    "name_en": "University of Dar es Salaam Library (New Library)",
+    "name_sw": "Maktaba Mpya ya Chuo Kikuu cha Dar es Salaam",
+    "category": "Library",
+    "latitude": null,
+    "longitude": null,
+    "photo_url": "",
+    "status": "needs_field_verification",
+    "source": "https://www.udsm.ac.tz/index.php/udsm-library/library-guide-collections"
+  },
+  {
+    "id": "chagula-library",
+    "name_en": "Dr. Wilbert K. Chagula Library",
+    "name_sw": "Maktaba ya Dkt. Wilbert K. Chagula",
+    "category": "Library",
+    "latitude": null,
+    "longitude": null,
+    "photo_url": "",
+    "status": "needs_field_verification",
+    "source": "https://www.udsm.ac.tz/index.php/udsm-library/library-guide-collections"
+  },
+  {
+    "id": "udsm-hospital",
+    "name_en": "University of Dar es Salaam Hospital",
+    "name_sw": "Hospitali ya Chuo Kikuu cha Dar es Salaam",
+    "category": "Health",
+    "latitude": null,
+    "longitude": null,
+    "photo_url": "",
+    "status": "needs_field_verification",
+    "source": "https://udsm.ac.tz/udsm-hospital"
+  },
+  {
+    "id": "udsm-museum",
+    "name_en": "University of Dar es Salaam Museum",
+    "name_sw": "Makumbusho ya Chuo Kikuu cha Dar es Salaam",
+    "category": "Museum",
+    "latitude": null,
+    "longitude": null,
+    "photo_url": "",
+    "status": "needs_field_verification",
+    "source": "https://udsm.ac.tz/udsm-museum/about-university-dar-es-salaam-museum"
+  },
+  {
+    "id": "social-sciences-tower",
+    "name_en": "Social Sciences Tower",
+    "name_sw": "Jengo la Social Sciences Tower",
+    "category": "Academic",
+    "latitude": null,
+    "longitude": null,
+    "photo_url": "",
+    "status": "needs_field_verification",
+    "source": "https://udsm.ac.tz/coss-aboutus"
+  },
+  {
+    "id": "cafeteria-one",
+    "name_en": "Cafeteria One",
+    "name_sw": "Cafeteria One",
+    "category": "Food",
+    "latitude": null,
+    "longitude": null,
+    "photo_url": "",
+    "status": "needs_field_verification",
+    "source": "https://www.udsm.ac.tz/index.php/node/729"
+  },
+  {
+    "id": "cafeteria-two",
+    "name_en": "Cafeteria Two",
+    "name_sw": "Cafeteria Two",
+    "category": "Food",
+    "latitude": null,
+    "longitude": null,
+    "photo_url": "",
+    "status": "needs_field_verification",
+    "source": "https://www.udsm.ac.tz/index.php/node/729"
+  },
+  {
+    "id": "yombo-cafeteria",
+    "name_en": "Yombo Cafeteria",
+    "name_sw": "Yombo Cafeteria",
+    "category": "Food",
+    "latitude": null,
+    "longitude": null,
+    "photo_url": "",
+    "status": "needs_field_verification",
+    "source": "https://www.udsm.ac.tz/index.php/node/729"
+  },
+  {
+    "id": "university-bookshop",
+    "name_en": "University Bookshop",
+    "name_sw": "Duka la Vitabu la Chuo",
+    "category": "Services",
+    "latitude": null,
+    "longitude": null,
+    "photo_url": "",
+    "status": "needs_field_verification",
+    "source": "https://www.udsm.ac.tz/index.php/node/729"
+  }
+]

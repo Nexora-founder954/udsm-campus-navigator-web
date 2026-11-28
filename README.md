@@ -1,39 +1,21 @@
-# UDSM Campus Navigator — Frontend Starter
+# UDSM Campus Navigator — Mlimani Main Campus
 
-A responsive, mobile-first website concept for an independent campus-wayfinding project proposed for discussion with the University of Dar es Salaam.
+## Kupakia GitHub
+1. Fungua https://github.com/Nexora-founder954/udsm-campus-navigator-web
+2. Chagua **Add file → Upload files**.
+3. Upload `navigator.html` na `udsm_mlimani_data.json`.
+4. Usifute `admin.html` yako iliyopo.
+5. Bonyeza **Commit changes** kwenye branch `main`.
+6. Fungua https://nexora-founder954.github.io/udsm-campus-navigator-web/navigator.html
 
-## Included
-- Homepage and project-proposal disclaimer
-- UDSM emblem image reference (Wikimedia Commons, CC BY-SA 4.0)
-- Origin field and browser GPS permission
-- Destination lookup using OpenStreetMap Nominatim
-- Interactive Leaflet map
-- Visual preview line and clearly labelled approximate straight-line distance/time
-- Indoor-navigation concept panel
-- English/Kiswahili hero toggle
+## Supabase (hiari)
+Katika `navigator.html`, jaza `SUPABASE_URL` na `SUPABASE_PUBLISHABLE_KEY` kwa taarifa zako za public tu. Usitumie `service_role` au secret key. Query inatarajia `campus_places` yenye `status`, `is_verified`, `latitude`, `longitude`, `name_en`, `name_sw` na `photo_url`.
 
-## Important limitations
-This is a **frontend prototype**, not a production navigation system.
-- The dotted line is a straight visual preview, not a pedestrian route.
-- Distance is straight-line distance; time is a rough estimate, not route travel time.
-- Campus room/building data has not been surveyed or verified.
-- Indoor floor-plan illustration is generic and must not be mistaken for a real UDSM floor plan.
-- Browser GPS may be inaccurate indoors.
-- Nominatim and OpenStreetMap data may not contain every campus feature.
-
-## Run
-Open `index.html` in a browser while connected to the internet. Map tiles and CDN libraries require internet access. For local development, use any simple static web server.
-
-## Next development milestones
-1. Confirm permission and brand usage with UDSM Directorate of Public Services.
-2. Obtain the approved logo asset and official branding guidance.
-3. Create a verified campus place directory and walking-path network.
-4. Add Supabase database, authentication, storage and row-level security.
-5. Build an admin dashboard for verified locations, buildings, rooms, photos, floors and pathways.
-6. Add real pedestrian routing over verified path data.
-7. Add indoor routing only from approved floor plans and verified corridors.
-8. Test accessibility, security, mobile behaviour and deployment.
-
-## Attribution
-- University of Dar es Salaam emblem: University of Dar es Salaam, via Wikimedia Commons, licensed CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:University_of_Dar_es_Salaam.png
-- Map data and tiles: © OpenStreetMap contributors, https://www.openstreetmap.org/copyright
+## Tahadhari
+Majina yametokana na kurasa za umma za UDSM; coordinates na picha zimeachwa wazi hadi zithibitishwe. GPS inahitaji HTTPS. Satellite hutumia Esri. Toleo hili halina bado turn-by-turn pedestrian routing iliyothibitishwa. Huu ni mradi wa demo wa mwanafunzi, si bidhaa rasmi ya UDSM.
+## Vyanzo
+- https://www.udsm.ac.tz/index.php/udsm-library/library-guide-collections
+- https://www.udsm.ac.tz/index.php/node/729
+- https://udsm.ac.tz/udsm-hospital
+- https://udsm.ac.tz/udsm-museum/about-university-dar-es-salaam-museum
+- https://udsm.ac.tz/coss-aboutus

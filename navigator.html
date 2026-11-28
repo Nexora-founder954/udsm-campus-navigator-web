@@ -1,249 +1,35 @@
 <!doctype html>
-<html lang="sw">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>UDSM Campus Navigator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<html lang="sw"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UDSM Campus Navigator</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <style>
-:root{--navy:#102a43;--green:#087f5b;--mint:#e9f7f1;--ink:#172b3a;--muted:#6b7c8f;--line:#e5ebf0;--paper:#f5f8fa;--white:#fff;--gold:#f0b429}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans",sans-serif}button,input{font:inherit}button{cursor:pointer}.top{background:linear-gradient(115deg,#092f2a,#0d5947 58%,#14785a);color:white;padding:18px max(20px,calc((100vw - 1240px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:12px}.logo{width:43px;height:43px;border-radius:14px;background:#ffffff1c;display:grid;place-items:center;font-size:22px;border:1px solid #ffffff35}.brand strong{font:800 16px Manrope;letter-spacing:.2px}.brand small{display:block;color:#c8e6dc;font-size:11px;margin-top:2px}.top-right{display:flex;gap:8px;align-items:center}.pill{border:1px solid #ffffff4a;background:#ffffff12;color:white;border-radius:30px;padding:8px 12px;font-size:12px}.wrap{max-width:1240px;margin:26px auto;padding:0 20px}.hero{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:20px}.eyebrow{color:var(--green);font-weight:800;font-size:11px;letter-spacing:1.5px;text-transform:uppercase}.hero h1{font:800 clamp(26px,4vw,38px) Manrope;margin:7px 0}.hero p{margin:0;color:var(--muted);max-width:620px;line-height:1.6}.status{background:#eaf7f0;color:#087f5b;border-radius:30px;padding:9px 13px;font-size:12px;font-weight:700;white-space:nowrap}.layout{display:grid;grid-template-columns:380px minmax(0,1fr);gap:18px;align-items:start}.panel,.map-panel,.below{background:white;border:1px solid var(--line);border-radius:22px;box-shadow:0 8px 28px #18334a08}.panel{padding:20px}.section-title{font:800 16px Manrope;margin:0 0 5px}.sub{font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 17px}.field{margin:14px 0}.field label{display:block;font-size:11px;font-weight:800;color:#526579;letter-spacing:.6px;margin-bottom:7px}.input-wrap{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:13px;padding:0 12px;background:#fbfcfd}.input-wrap:focus-within{border-color:#42a985;box-shadow:0 0 0 3px #087f5b13}.input-wrap input{border:0;outline:0;background:transparent;width:100%;padding:14px 0;color:var(--ink);font-size:13px}.locate{width:100%;border:0;background:var(--mint);color:var(--green);padding:12px;border-radius:12px;font-weight:800;font-size:12px;margin-top:9px}.primary{width:100%;border:0;background:linear-gradient(100deg,#087f5b,#13a477);color:white;padding:14px;border-radius:13px;font-weight:800;margin-top:8px;box-shadow:0 7px 18px #087f5b25}.primary:disabled{opacity:.5;cursor:not-allowed}.hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:10px}.results{margin-top:14px;display:grid;gap:7px;max-height:260px;overflow:auto}.result{border:1px solid var(--line);border-radius:12px;padding:11px;text-align:left;background:white;width:100%;display:flex;gap:10px;align-items:center}.result:hover{border-color:#75bda2;background:#f8fcfa}.result .pin{width:32px;height:32px;background:var(--mint);border-radius:10px;display:grid;place-items:center}.result b{font-size:12px;display:block}.result small{font-size:10px;color:var(--muted)}.map-panel{overflow:hidden}.map-head{display:flex;justify-content:space-between;align-items:center;padding:15px 17px;border-bottom:1px solid var(--line);gap:10px}.map-head strong{font:800 14px Manrope}.map-head span{font-size:11px;color:var(--muted)}#map{height:520px;width:100%;background:#eaf0ed}.maplibregl-ctrl-group{border-radius:12px!important;overflow:hidden}.photo-marker{width:58px;height:58px;border:3px solid white;border-radius:15px;box-shadow:0 5px 18px #102a4355;overflow:hidden;background:#e9f7f1;display:grid;place-items:center}.photo-marker img{width:100%;height:100%;object-fit:cover}.photo-marker span{font-size:25px}.map-popup{font-family:"DM Sans",sans-serif;min-width:150px}.map-popup img{width:100%;height:88px;object-fit:cover;border-radius:8px;margin-bottom:7px}.map-popup b{font-size:12px}.map-popup small{display:block;color:#6b7c8f;margin-top:3px}.map-legend{display:flex;gap:15px;flex-wrap:wrap;padding:12px 17px;font-size:11px;color:var(--muted)}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:var(--green)}.dot.blue{background:#2878d0}.below{margin-top:18px;padding:18px 20px}.below-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}.mini{border:1px solid var(--line);border-radius:14px;padding:13px}.mini strong{font-size:12px;display:block;margin-bottom:5px}.mini p{font-size:11px;color:var(--muted);margin:0;line-height:1.5}.route-card{display:none;margin-top:14px;border:1px solid #d9eee4;background:#f7fcf9;border-radius:15px;padding:14px}.route-card h3{margin:0 0 9px;font:800 14px Manrope}.route-stats{display:flex;gap:20px;flex-wrap:wrap}.route-stats b{font-size:18px;display:block}.route-stats small{font-size:10px;color:var(--muted)}.notice{margin-top:10px;background:#fff8e8;color:#805d13;border-radius:10px;padding:10px;font-size:10px;line-height:1.5}
-.steps{display:none;margin-top:14px;border:1px solid var(--line);border-radius:15px;padding:14px;background:#fff}
-.steps h3{font:800 14px Manrope;margin:0 0 10px}
-.step-list{display:grid;gap:8px}
-.step{display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px}
-.step-icon{width:40px;height:40px;border-radius:12px;background:#eaf4ff;display:grid;place-items:center;font-size:21px}
-.step b{display:block;font-size:12px}.step small{color:var(--muted);font-size:10px}
-.photo-modal{position:fixed;inset:0;background:#071521e8;z-index:9999;display:none;align-items:center;justify-content:center;padding:18px}
-.photo-modal.open{display:flex}.photo-dialog{width:min(900px,100%);max-height:92vh;background:white;border-radius:18px;overflow:auto;position:relative}
-.photo-dialog img{width:100%;max-height:70vh;object-fit:contain;background:#101820;display:block}
-.photo-info{padding:15px 18px}.photo-info h2{font:800 18px Manrope;margin:0 0 6px}.photo-info p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
-.photo-close{position:absolute;right:12px;top:12px;border:0;border-radius:50%;width:40px;height:40px;background:#fff;color:#102a43;font-size:22px;box-shadow:0 3px 12px #0004}
-.footer{text-align:center;color:#8b99a7;font-size:10px;padding:22px}.empty{font-size:12px;color:var(--muted);padding:12px;text-align:center}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.hero{align-items:start;flex-direction:column}.status{white-space:normal}.panel{order:1}.map-panel{order:2}#map{height:420px}.below-grid{grid-template-columns:1fr}.top{padding:14px 17px}.wrap{margin:18px auto;padding:0 13px}}
-</style>
-</head>
-<body>
-<header class="top">
- <div class="brand"><div class="logo">🧭</div><div><strong>UDSM CAMPUS NAVIGATOR</strong><small>Find your way around campus</small></div></div>
- <div class="top-right"><span class="pill">● Campus guide</span><span class="pill">SW / EN</span></div>
-</header>
-<main class="wrap">
- <section class="hero"><div><div class="eyebrow">Karibu University of Dar es Salaam</div><h1>Unataka kwenda wapi?</h1><p>Tafuta jengo, lecture room, ofisi au huduma. Weka ulipo, chagua unakokwenda, kisha angalia eneo kwenye ramani.</p></div><div class="status">● Mfumo wa majaribio</div></section>
- <div class="layout">
-  <section class="panel">
-   <h2 class="section-title">Panga safari yako</h2><p class="sub">Jaza sehemu ya kuanzia na unakoelekea ili kuanza kutafuta.</p>
-   <div class="field"><label>ORIGIN · ULIPO SASA</label><div class="input-wrap"><span>📍</span><input id="origin" placeholder="Tumia GPS au andika ulipo"></div><button class="locate" id="gps">◎ TUMIA GPS KUPATA NILIPO</button></div>
-   <div class="field"><label>DESTINATION · UNAKOTAKA KWENDA</label><div class="input-wrap"><span>⌕</span><input id="search" placeholder="Mfano: New Library, Nkrumah Hall"></div><div class="results" id="results"><div class="empty">Maeneo yaliyochapishwa na kuthibitishwa yataonekana hapa.</div></div></div>
-   <button class="primary" id="showRoute" disabled>➤ NIONYESHE ENEO KWENYE RAMANI</button>
-   <div class="route-card" id="routeCard"><h3 id="destTitle">Safari yako</h3><div class="route-stats"><div><b id="distance">—</b><small>Umbali wa njia ya kutembea</small></div><div><b id="duration">—</b><small>Muda wa kutembea</small></div></div><div class="notice">Njia ya bluu hutumia data ya OpenStreetMap kupitia huduma ya Valhalla. Ikiwa huduma haipatikani, mstari wa njano wa nukta ni makadirio tu, si njia salama iliyothibitishwa. Fuata alama za chuo na maelekezo ya eneo.</div></div>
-   <div class="steps" id="steps"><h3>🧭 Maelekezo ya safari hatua kwa hatua</h3><div class="step-list" id="stepList"></div></div>
-   <p class="hint">Taarifa za maeneo huonyeshwa baada ya kuwekwa Published na Verified na msimamizi.</p>
-  </section>
-  <section class="map-panel"><div class="map-head"><div><strong>LIVE CAMPUS MAP</strong><br><span>Ramani ya maeneo ya chuo</span></div><span id="mapStatus">3D Satellite · Inasubiri eneo...</span></div><div id="map"></div><div class="map-legend"><span><i class="dot blue"></i>Ulipo</span><span><i class="dot"></i>Destination yenye picha</span><span>━━ Njia ya watembea kwa miguu (data ikipatikana)</span><span>Majengo na njia jirani kutoka OpenStreetMap</span></div></section>
- </div>
- <section class="below"><h2 class="section-title">Utapata nini kwenye navigator?</h2><div class="below-grid"><div class="mini"><strong>📸 Picha za majengo</strong><p>Picha halisi za majengo, milango na alama za kutambua eneo zitaongezwa baada ya kuthibitishwa.</p></div><div class="mini"><strong>🚶 Njia za kutembea</strong><p>Njia salama na zinazopitika zitaunganishwa baada ya kukusanya na kuthibitisha data ya njia za chuo.</p></div><div class="mini"><strong>📍 Maeneo yaliyo karibu</strong><p>Majengo na huduma zilizo karibu zitaonekana kadri taarifa zake na viwianishi vinavyopatikana.</p></div></div></section>
- <div class="footer">UDSM Campus Navigator · Independent prototype · Si tovuti rasmi ya UDSM</div>
-</main>
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-/* Tumia Project URL na Publishable key zilezile zilizowekwa kwenye admin.html.
-   Weka Project URL bila /rest/v1/; usitumie service_role/secret key. */
-const SUPABASE_URL = "https://cjilftgrqtigaxykkakj.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_fnnqvP12L8Tim_sQGxYUmg_JqNXkWtV";
-let db = null, places = [], selected = null, userPoint = null, userMarker = null, destMarker = null, routeLine = null, satelliteOn = true;
-const map = new maplibregl.Map({
- container:'map',
- style:'https://tiles.openfreemap.org/styles/liberty',
- center:[39.2380,-6.7735],
- zoom:15.5,
- pitch:58,
- bearing:-18,
- antialias:true
-});
-map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-right');
-map.addControl(new maplibregl.GeolocateControl({positionOptions:{enableHighAccuracy:true},trackUserLocation:false,showUserHeading:true}),'top-right');
-map.addControl(new maplibregl.ScaleControl({maxWidth:110,unit:'metric'}),'bottom-left');
-map.on('load',()=>{
-  // Satellite imagery layer (Esri World Imagery). Attribution is shown in the map.
-  map.addSource('udsm-satellite',{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'});
-  const firstSymbol = map.getStyle().layers.find(l=>l.type==='symbol')?.id;
-  map.addLayer({id:'udsm-satellite-layer',type:'raster',source:'udsm-satellite',paint:{'raster-opacity':0.94}},firstSymbol);
-  // 3D building extrusions from OpenFreeMap / OpenStreetMap vector data.
-  try {
-    map.addLayer({
-      id:'udsm-3d-buildings',
-      source:'openmaptiles',
-      'source-layer':'building',
-      type:'fill-extrusion',
-      minzoom:14,
-      paint:{
-        'fill-extrusion-color':'#d8e0e4',
-        'fill-extrusion-height':['coalesce',['get','render_height'],['get','height'],8],
-        'fill-extrusion-base':['coalesce',['get','render_min_height'],0],
-        'fill-extrusion-opacity':0.88
-      }
-    },firstSymbol);
-  } catch(e) { console.warn('3D building layer unavailable in current basemap style',e); }
-  status('3D Satellite imefunguliwa');
-});
-map.on('error',e=>console.warn('Map error',e));
-const $ = id => document.getElementById(id);
-function status(t){$('mapStatus').textContent=t}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function coords(p){if(p.latitude===null||p.latitude===undefined||String(p.latitude).trim()===''||p.longitude===null||p.longitude===undefined||String(p.longitude).trim()==='')return null;const lat=Number(p.latitude),lng=Number(p.longitude);return Number.isFinite(lat)&&Number.isFinite(lng)&&Math.abs(lat)<=90&&Math.abs(lng)<=180? [lng,lat]:null}
-function label(p){return p.name_sw||p.name_en||'Eneo bila jina'}
-function photoMarker(url,title){
- const el=document.createElement('div');el.className='photo-marker';
- if(url){const img=document.createElement('img');img.src=url;img.alt=title;img.onerror=()=>{el.innerHTML='<span>🏛️</span>'};el.appendChild(img)}
- else el.innerHTML='<span>🏛️</span>';
- return el;
-}
-function openPhoto(p){
- if(!p.photo_url){alert('Picha halisi ya eneo hili bado haijawekwa. Msimamizi aongeze Photo URL iliyothibitishwa.');return}
- $('largePhoto').src=p.photo_url;$('largeTitle').textContent=label(p);
- $('largeDescription').textContent=p.description_sw||p.description_en||'University of Dar es Salaam';
- $('photoModal').classList.add('open');
-}
-$('photoClose').addEventListener('click',()=>$('photoModal').classList.remove('open'));
-$('photoModal').addEventListener('click',e=>{if(e.target===$('photoModal'))$('photoModal').classList.remove('open')});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')$('photoModal').classList.remove('open')});
-function popupHtml(p){
- const photo=p.photo_url?`<img src="${esc(p.photo_url)}" alt="${esc(label(p))}" onerror="this.style.display='none'">`:'';
- return `<div class="map-popup">${photo}<b>${esc(label(p))}</b><small>${esc(p.name_en||p.place_type||'UDSM')}</small><small>Gusa alama ili kuona picha kubwa</small></div>`;
-}
-function addPlaceMarker(p){
- const c=coords(p);if(!c)return;
- const el=photoMarker(p.photo_url,label(p));el.title='Gusa kuona picha kubwa';
- el.addEventListener('click',()=>openPhoto(p));
- new maplibregl.Marker({element:el,anchor:'bottom'})
- .setLngLat(c).setPopup(new maplibregl.Popup({offset:24}).setHTML(popupHtml(p))).addTo(map);
-}
-
-let footwayLoaded=false, nearbyLoaded=false, routeGeoSource=false;
-function decodePolyline6(str){
- let index=0,lat=0,lng=0,coords=[];
- while(index<str.length){
-  let result=0,shift=0,b;
-  do{b=str.charCodeAt(index++)-63;result|=(b&0x1f)<<shift;shift+=5}while(b>=0x20);
-  lat+=(result&1)?~(result>>1):(result>>1);
-  result=0;shift=0;
-  do{b=str.charCodeAt(index++)-63;result|=(b&0x1f)<<shift;shift+=5}while(b>=0x20);
-  lng+=(result&1)?~(result>>1):(result>>1);
-  coords.push([lng/1e6,lat/1e6]);
- }
- return coords;
-}
-async function loadNearby(lat,lng){
- const south=lat-0.009,north=lat+0.009,west=lng-0.009,east=lng+0.009;
- const query=`[out:json][timeout:20];(way["highway"~"footway|path|pedestrian|steps|living_street"](${south},${west},${north},${east});way["building"](${south},${west},${north},${east}););out geom;`;
- try{
-  const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query)});
-  if(!r.ok)throw new Error('OSM service');
-  const data=await r.json(),features=[];
-  for(const el of (data.elements||[])){
-   if(!el.geometry||el.geometry.length<2)continue;
-   const line=el.geometry.map(pt=>[pt.lon,pt.lat]);
-   const isPath=!!el.tags?.highway;
-   features.push({type:'Feature',geometry:{type:isPath?'LineString':'Polygon',coordinates:isPath?line:[line]},properties:{kind:isPath?'path':'building',name:el.tags?.name||el.tags?.['name:en']||''}});
-  }
-  if(map.getSource('udsm-nearby'))map.removeSource('udsm-nearby');
-  if(map.getLayer('udsm-nearby-paths'))map.removeLayer('udsm-nearby-paths');
-  if(map.getLayer('udsm-nearby-buildings'))map.removeLayer('udsm-nearby-buildings');
-  map.addSource('udsm-nearby',{type:'geojson',data:{type:'FeatureCollection',features}});
-  map.addLayer({id:'udsm-nearby-buildings',type:'line',source:'udsm-nearby',filter:['==',['get','kind'],'building'],paint:{'line-color':'#f0b429','line-width':2,'line-opacity':0.8}});
-  map.addLayer({id:'udsm-nearby-paths',type:'line',source:'udsm-nearby',filter:['==',['get','kind'],'path'],paint:{'line-color':'#087fbb','line-width':3,'line-opacity':0.85}});
-  nearbyLoaded=true;footwayLoaded=true;
-  status('Majengo na njia jirani za OSM zimepakiwa');
- }catch(e){console.warn('Nearby OSM data unavailable',e);status('Data za njia jirani hazikupatikana kwa sasa')}
-}
-function maneuverIcon(type,modifier){
- const m=(modifier||'').toLowerCase();
- if(type==='depart')return '🚶';
- if(type==='arrive')return '🏁';
- if(m.includes('left'))return '⬅️';
- if(m.includes('right'))return '➡️';
- if(m.includes('uturn'))return '↩️';
- if(m.includes('straight'))return '⬆️';
- if(type==='roundabout')return '🔄';
- return '🚶';
-}
-function showSteps(maneuvers){
- const box=$('steps'),list=$('stepList');
- if(!maneuvers?.length){box.style.display='block';list.innerHTML='<div class="empty">Huduma ya maelekezo haikurudisha hatua. Angalia njia iliyoangaziwa kwenye ramani.</div>';return}
- list.innerHTML=maneuvers.map((m,i)=>{
-  const km=(Number(m.length||0)).toFixed(2)+' km';
-  const instruction=esc(m.instruction||m.verbal_transition_alert_instruction||'Endelea mbele');
-  return `<div class="step"><div class="step-icon">${maneuverIcon(m.type,m.modifier)}</div><div><b>${i+1}. ${instruction}</b><small>${km}${m.time?' · takriban '+Math.max(1,Math.round(m.time/60))+' dakika':''}</small></div></div>`;
- }).join('');
- box.style.display='block';
-}
-async function getWalkingRoute(start,end){
- const body={locations:[{lat:start[0],lon:start[1]},{lat:end[1],lon:end[0]}], costing:'pedestrian',units:'kilometers',directions_options:{language:'en-US'}};
- const url='https://valhalla1.openstreetmap.de/route?json='+encodeURIComponent(JSON.stringify(body));
- const response=await fetch(url);
- if(!response.ok)throw new Error('Walking route service unavailable');
- const data=await response.json();
- if(data.error||!data.trip?.legs?.length)throw new Error(data.error||'No pedestrian route');
- const leg=data.trip.legs[0],shape=decodePolyline6(leg.shape);
- if(shape.length<2)throw new Error('No route geometry');
- return {coordinates:shape,distanceKm:data.trip.summary.length,durationSeconds:data.trip.summary.time,maneuvers:leg.maneuvers||[]};
-}
-async function init(){
- if(SUPABASE_URL.startsWith('WEKA_')||SUPABASE_PUBLISHABLE_KEY.startsWith('WEKA_')){status('Weka mipangilio ya Supabase');$('results').innerHTML='<div class="empty">Unganisha Project URL na Publishable key kutoka admin.html ili kupakia maeneo.</div>';return}
- try{db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const {data,error}=await db.from('campus_places').select('id,name_sw,name_en,place_type,description_sw,description_en,latitude,longitude,photo_url,building_code,room_code,floor_name').eq('status','published').eq('is_verified',true).order('name_sw');if(error)throw error;places=data||[];renderResults(places);places.forEach(addPlaceMarker);status(`${places.length} maeneo yaliyothibitishwa · 3D Satellite`)}
- catch(e){status('Imeshindikana kupakia maeneo');$('results').innerHTML='<div class="empty">Imeshindikana kupakia data. Hakiki Supabase URL, key na ruhusa za kusoma maeneo yaliyothibitishwa.</div>';console.error(e)}
-}
-function renderResults(items){$('results').innerHTML=items.length?items.slice(0,30).map((p,i)=>`<button class="result" data-id="${esc(p.id)}"><span class="pin">📍</span><span><b>${esc(label(p))}</b><small>${esc(p.name_en||p.place_type||'UDSM')}</small></span></button>`).join(''):'<div class="empty">Hakuna eneo lililothibitishwa linalolingana na utafutaji huu.</div>';document.querySelectorAll('.result').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.id)))}
-$('search').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();renderResults(places.filter(p=>[p.name_sw,p.name_en,p.place_type,p.building_code,p.room_code].some(v=>String(v||'').toLowerCase().includes(q))))});
-function choose(id){selected=places.find(p=>String(p.id)===String(id));if(!selected)return;$('search').value=label(selected);$('showRoute').disabled=false;renderResults([selected])}
-$('gps').addEventListener('click',()=>{if(!navigator.geolocation){alert('Kifaa hiki hakiungi mkono GPS.');return}status('Inatafuta ulipo...');navigator.geolocation.getCurrentPosition(pos=>{userPoint=[pos.coords.latitude,pos.coords.longitude];$('origin').value='Eneo langu la sasa (GPS)';if(userMarker)userMarker.remove();const el=document.createElement('div');el.style.cssText='width:22px;height:22px;border-radius:50%;background:#2878d0;border:4px solid white;box-shadow:0 0 0 7px #2878d044';userMarker=new maplibregl.Marker({element:el}).setLngLat([userPoint[1],userPoint[0]]).setPopup(new maplibregl.Popup().setText('Ulipo sasa')).addTo(map);map.flyTo({center:[userPoint[1],userPoint[0]],zoom:17.5,pitch:62,bearing:map.getBearing(),essential:true});status('GPS imepatikana');loadNearby(userPoint[0],userPoint[1])},err=>{status('GPS haikupatikana');alert('Imeshindikana kupata GPS. Washa Location kwenye simu na ruhusu browser kuitumia.')},{enableHighAccuracy:true,timeout:15000,maximumAge:10000})});
-function metres(a,b){const R=6371000,rad=x=>x*Math.PI/180,dLat=rad(b[0]-a[0]),dLon=rad(b[1]-a[1]),x=Math.sin(dLat/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
-$('showRoute').addEventListener('click',async()=>{
- if(!selected)return;
- const end=coords(selected);
- if(!end){alert('Eneo hili bado halina GPS iliyothibitishwa. Msimamizi anahitaji kuongeza viwianishi sahihi.');return}
- if(destMarker)destMarker.remove();
- if(map.getLayer('udsm-walking-route'))map.removeLayer('udsm-walking-route');
- if(map.getSource('udsm-walking-route'))map.removeSource('udsm-walking-route');
- const markerEl=photoMarker(selected.photo_url,label(selected));markerEl.addEventListener('click',()=>openPhoto(selected));
- destMarker=new maplibregl.Marker({element:markerEl,anchor:'bottom'}).setLngLat(end).setPopup(new maplibregl.Popup({offset:24}).setHTML(popupHtml(selected))).addTo(map);
- $('destTitle').textContent=label(selected);$('routeCard').style.display='block';
- $('steps').style.display='none';$('distance').textContent='Inatafuta njia...';$('duration').textContent='—';
- if(userPoint){
-  loadNearby((userPoint[0]+end[1])/2,(userPoint[1]+end[0])/2);
-  try{
-   const route=await getWalkingRoute(userPoint,end);
-   map.addSource('udsm-walking-route',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:route.coordinates},properties:{}}});
-   map.addLayer({id:'udsm-walking-route',type:'line',source:'udsm-walking-route',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#087fbb','line-width':5,'line-opacity':0.95}});
-   $('distance').textContent=route.distanceKm.toFixed(2)+' km';
-   $('duration').textContent=Math.max(1,Math.round(route.durationSeconds/60))+' min';
-   showSteps(route.maneuvers);
-   const bounds=new maplibregl.LngLatBounds();route.coordinates.forEach(c=>bounds.extend(c));
-   map.fitBounds(bounds,{padding:75,pitch:58,bearing:-18,duration:1200});
-   status('Njia ya watembea kwa miguu imepatikana');
-  }catch(e){
-   console.warn('Pedestrian routing unavailable',e);
-   const line=[[userPoint[1],userPoint[0]],end];
-   map.addSource('udsm-walking-route',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:line},properties:{}}});
-   map.addLayer({id:'udsm-walking-route',type:'line',source:'udsm-walking-route',paint:{'line-color':'#d97706','line-width':4,'line-dasharray':[2,2]}});
-   const m=metres(userPoint,[end[1],end[0]]);
-   $('distance').textContent='~'+(m>=1000?(m/1000).toFixed(2)+' km':Math.round(m)+' m');
-   $('duration').textContent='Makadirio tu';
-   $('steps').style.display='block';
-   $('stepList').innerHTML='<div class="notice">Huduma ya njia halisi haikupatikana kwa sasa. Mstari wa nukta ni muunganiko wa moja kwa moja tu—si njia ya kutembea. Jaribu tena baadaye.</div>';
-   const bounds=new maplibregl.LngLatBounds(line[0],line[1]);map.fitBounds(bounds,{padding:75,pitch:58,bearing:-18,duration:1000});
-   status('Njia halisi haikupatikana; mstari wa makadirio umeonyeshwa');
-  }
- }else{
-  map.flyTo({center:end,zoom:18,pitch:62,duration:1200});
-  $('distance').textContent='Weka GPS';$('duration').textContent='—';
-  $('steps').style.display='block';$('stepList').innerHTML='<div class="empty">Washa GPS ili kupata njia na maelekezo ya kutembea.</div>';
-  loadNearby(end[1],end[0]);status('Destination imeonyeshwa');
- }
-});
-init();
-</script>
-</body></html>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:#f3f6fb;color:#172b45}header{background:linear-gradient(120deg,#071d3a,#14518b);color:white;padding:18px;display:flex;gap:14px;align-items:center}.logo{border:2px solid #ffffff88;border-radius:13px;padding:12px;color:#f2b632;font-weight:900}h1{font-size:19px;margin:0}header p{font-size:12px;margin:4px 0 0;color:#d8e8fa}.layout{display:grid;grid-template-columns:340px 1fr;gap:14px;padding:14px;max-width:1400px;margin:auto}.panel,.mapbox{background:white;border:1px solid #e1e8f0;border-radius:16px;overflow:hidden}.panel{padding:17px}.mapbox{position:relative;min-height:680px}#map{position:absolute;inset:0}.tag{color:#1264c5;font-size:11px;font-weight:800;letter-spacing:1px}h2{font-size:18px;margin:6px 0 15px}label{display:block;font-size:12px;font-weight:700;margin:12px 0 5px}input,select{width:100%;padding:12px;border:1px solid #d6e0ec;border-radius:10px;font-size:14px}button{border:0;border-radius:10px;padding:11px 13px;background:#1264c5;color:white;font-weight:700;cursor:pointer}.secondary{background:#eaf1fa;color:#17416f}.actions,.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.actions button{flex:1}.tools{position:absolute;right:12px;top:12px;z-index:2}.status{position:absolute;bottom:12px;left:12px;z-index:2;background:white;padding:10px;border-radius:10px;font-size:12px;max-width:80%;box-shadow:0 3px 15px #0002}.entry{border:1px solid #e5ebf2;border-radius:10px;padding:10px;margin:7px 0;cursor:pointer}.entry b{display:block;font-size:13px}.entry small{color:#64748b}.entries{max-height:38vh;overflow:auto;margin-top:14px}.hint{font-size:11px;line-height:1.5;color:#64748b;margin-top:12px}.modal{display:none;position:fixed;inset:0;background:#06172bdd;z-index:5;align-items:center;justify-content:center;padding:15px}.modal.open{display:flex}.card{background:white;border-radius:15px;max-width:600px;width:100%;padding:18px}.card img{width:100%;max-height:330px;object-fit:cover}.card h3{margin:8px 0}.card p{font-size:13px;line-height:1.5}@media(max-width:850px){.layout{grid-template-columns:1fr;padding:9px}.mapbox{min-height:55vh;order:1}.panel{order:2}}
+</style></head><body>
+<header><div class="logo">UD</div><div><h1>UDSM Campus Navigator</h1><p>Mlimani Main Campus · Mwongozo wa maeneo ya chuo</p></div></header>
+<main class="layout"><section class="panel"><div class="tag">TAFUTA ENEO</div><h2>Unataka kwenda wapi?</h2>
+<label>Mahali ulipo / Origin</label><input id="origin" placeholder="Tumia GPS au andika ulipo">
+<label>Unakoenda / Destination</label><input id="dest" list="opts" placeholder="Tafuta jengo au huduma"><datalist id="opts"></datalist>
+<div class="actions"><button id="gps">◎ Eneo langu</button><button class="secondary" id="search">Tafuta</button></div>
+<label>Lugha / Language</label><select id="lang"><option value="sw">Kiswahili</option><option value="en">English</option></select>
+<p class="hint">GPS inahitaji HTTPS na ruhusa ya kifaa. Majina ya maeneo yameorodheshwa lakini koordineti na picha ziko wazi hadi zithibitishwe. Njia za watembea kwa miguu hazijawezeshwa katika toleo hili.</p>
+<div class="entries" id="entries">Inapakia maeneo…</div></section>
+<section class="mapbox"><div id="map"></div><div class="tools"><button class="secondary" id="sat">Satellite</button><button class="secondary" id="tilt">3D / Tilt</button><button class="secondary" id="north">North</button><button class="secondary" id="plus">＋</button><button class="secondary" id="minus">－</button></div><div class="status" id="status">Ramani inafunguka…</div></section></main>
+<div class="modal" id="modal"><div class="card"><img id="photo" style="display:none" alt="Picha ya eneo"><h3 id="title"></h3><p id="desc"></p><button class="secondary" id="close">Funga</button></div></div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script><script>
+/* Supabase optional: fill only with project URL and public publishable key, never service_role. */
+const SUPABASE_URL="",SUPABASE_PUBLISHABLE_KEY="";
+let items=[],lang="sw",gpsMarker=null,destMarker=null,satellite=false;
+const $=x=>document.getElementById(x),say=x=>$("status").textContent=x;
+const map=new maplibregl.Map({container:"map",style:"https://tiles.openfreemap.org/styles/liberty",center:[39.205,-6.773],zoom:14.2});
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
+map.on("load",()=>say("Ramani iko tayari. Tafuta eneo au tumia GPS."));
+const nm=p=>lang==="sw"?(p.name_sw||p.name_en):(p.name_en||p.name_sw);
+function hasCoords(p){return p.latitude!=null&&p.longitude!=null&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)}
+function openPlace(p){$("dest").value=nm(p);if(destMarker)destMarker.remove();if(hasCoords(p)){destMarker=new maplibregl.Marker({color:"#1264c5"}).setLngLat([+p.longitude,+p.latitude]).addTo(map);map.flyTo({center:[+p.longitude,+p.latitude],zoom:17});} $("title").textContent=nm(p);$("desc").textContent=p.description_sw||p.description_en||"Taarifa za eneo.";if(p.photo_url){$("photo").src=p.photo_url;$("photo").style.display="block"}else{$("photo").style.display="none";$("photo").removeAttribute("src")} $("modal").classList.add("open");say(hasCoords(p)?"Eneo limewekwa kwenye ramani.":"Eneo limechaguliwa; koordineti hazijathibitishwa.");}
+function render(){let list=$("entries"),opts=$("opts");list.innerHTML="";opts.innerHTML="";items.forEach(p=>{let o=document.createElement("option");o.value=nm(p);opts.append(o);let e=document.createElement("div");e.className="entry";let b=document.createElement("b");b.textContent=nm(p);let s=document.createElement("small");s.textContent=(p.category||"Eneo")+" · "+(hasCoords(p)?"Koordineti zipo":"Inahitaji uhakiki");e.append(b,s);e.onclick=()=>openPlace(p);list.append(e);if(hasCoords(p)){let el=document.createElement("div");el.style.cssText="width:17px;height:17px;border:3px solid white;border-radius:50%;background:#f2b632";new maplibregl.Marker({element:el}).setLngLat([+p.longitude,+p.latitude]).addTo(map).getElement().onclick=()=>openPlace(p);}});}
+async function load(){try{if(SUPABASE_URL&&SUPABASE_PUBLISHABLE_KEY){let u=SUPABASE_URL.replace(/\\/$/,"")+"/rest/v1/campus_places?select=*&status=eq.published&is_verified=eq.true";let r=await fetch(u,{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:"Bearer "+SUPABASE_PUBLISHABLE_KEY}});if(!r.ok)throw Error(r.status);items=await r.json();}else{let r=await fetch("./udsm_mlimani_data.json");if(!r.ok)throw Error(r.status);items=await r.json();}render();say("Maeneo "+items.length+" yamepakiwa.");}catch(e){console.error(e);$("entries").textContent="Imeshindikana kupakia JSON. Hakikisha faili lipo pamoja na navigator.html.";say("Tatizo la kupakia data.");}}
+$("gps").onclick=()=>{if(!navigator.geolocation){say("GPS haipatikani.");return;}say("Inaomba ruhusa ya GPS…");navigator.geolocation.getCurrentPosition(p=>{let c=[p.coords.longitude,p.coords.latitude];$("origin").value=p.coords.latitude.toFixed(6)+", "+p.coords.longitude.toFixed(6);if(gpsMarker)gpsMarker.remove();let el=document.createElement("div");el.style.cssText="width:19px;height:19px;border:4px solid white;border-radius:50%;background:#1687ff;box-shadow:0 0 0 7px #1687ff35";gpsMarker=new maplibregl.Marker({element:el}).setLngLat(c).addTo(map);map.flyTo({center:c,zoom:17});say("Eneo lako limepatikana; alama ya bluu imewekwa.");},()=>say("GPS haikupatikana. Ruhusu Location na ujaribu tena."),{enableHighAccuracy:true,timeout:15000});};
+function search(){let q=$("dest").value.toLowerCase().trim(),p=items.find(x=>[x.name_en,x.name_sw,x.id].filter(Boolean).some(v=>v.toLowerCase().includes(q)));if(p)openPlace(p);else say("Hakuna eneo linalolingana.");}
+$("search").onclick=search;$("dest").onkeydown=e=>{if(e.key==="Enter")search()};$("lang").onchange=e=>{lang=e.target.value;render()};
+$("sat").onclick=()=>{satellite=!satellite;if(satellite){if(!map.getSource("esri")){map.addSource("esri",{type:"raster",tiles:["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],tileSize:256,attribution:"Tiles © Esri"});map.addLayer({id:"esri-layer",type:"raster",source:"esri"});} $("sat").textContent="Street map";}else{if(map.getLayer("esri-layer"))map.removeLayer("esri-layer");$("sat").textContent="Satellite";}};
+$("tilt").onclick=()=>map.easeTo({pitch:map.getPitch()>20?0:55,duration:600});$("north").onclick=()=>map.easeTo({bearing:0,pitch:0});$("plus").onclick=()=>map.zoomIn();$("minus").onclick=()=>map.zoomOut();$("close").onclick=()=>$("modal").classList.remove("open");$("modal").onclick=e=>{if(e.target===$("modal"))$("modal").classList.remove("open")};load();
+</script></body></html>
