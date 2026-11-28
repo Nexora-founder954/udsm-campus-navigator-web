@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="sw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UDSM Campus Navigator</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Arial;background:#f3f6fb;color:#172b45}
+header{background:linear-gradient(120deg,#071d3a,#14518b);color:white;padding:18px;display:flex;gap:14px;align-items:center}
+.logo{border:2px solid #ffffff88;border-radius:13px;padding:12px;color:#f2b632;font-weight:900}
+h1{font-size:19px;margin:0}
+header p{font-size:12px;margin:4px 0 0;color:#d8e8fa}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:14px;padding:14px;max-width:1400px;margin:auto}
+.panel,.mapbox{background:white;border:1px solid #e1e8f0;border-radius:16px;overflow:hidden}
+.panel{padding:17px}
+.mapbox{position:relative;min-height:680px}
+#map{position:absolute;inset:0}
+.tag{color:#1264c5;font-size:11px;font-weight:800;letter-spacing:1px}
+h2{font-size:18px;margin:6px 0 15px}
+label{display:block;font-size:12px;font-weight:700;margin:12px 0 5px}
+input,select{width:100%;padding:12px;border:1px solid #d6e0ec;border-radius:10px;font-size:14px}
+button{border:0;border-radius:10px;padding:11px 13px;background:#1264c5;color:white;font-weight:700;cursor:pointer}
+.secondary{background:#eaf1fa;color:#17416f}
+.actions,.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.actions button{flex:1}
+.tools{position:absolute;right:12px;top:12px;z-index:2}
+.status{position:absolute;bottom:12px;left:12px;z-index:2;background:white;padding:10px;border-radius:10px;font-size:12px;max-width:80%;box-shadow:0 3px 15px #0002}
+.entry{border:1px solid #e5ebf2;border-radius:10px;padding:10px;margin:7px 0;cursor:pointer}
+.entry b{display:block;font-size:13px}
+.entry small{color:#64748b}
+.entries{max-height:38vh;overflow:auto;margin-top:14px}
+.hint{font-size:11px;line-height:1.5;color:#64748b;margin-top:12px}
+.modal{display:none;position:fixed;inset:0;background:#06172bdd;z-index:5;align-items:center;justify-content:center;padding:15px}
+.modal.open{display:flex}
+.card{background:white;border-radius:15px;max-width:600px;width:100%;padding:18px}
+.card img{width:100%;max-height:330px;object-fit:cover}
+.card h3{margin:8px 0}
+.card p{font-size:13px;line-height:1.5}
+@media(max-width:850px){
+ .layout{grid-template-columns:1fr;padding:9px}
+ .mapbox{min-height:55vh;order:1}
+ .panel{order:2}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">UD</div>
+  <div><h1>UDSM Campus Navigator</h1><p>Mlimani Main Campus · Mwongozo wa maeneo ya chuo</p></div>
+</header>
+<main class="layout">
+<section class="panel">
+  <div class="tag">TAFUTA ENEO</div>
+  <h2>Unataka kwenda wapi?</h2>
+  <label for="origin">Mahali ulipo / Origin</label>
+  <input id="origin" placeholder="Tumia GPS au andika ulipo">
+  <label for="dest">Unakoenda / Destination</label>
+  <input id="dest" list="opts" placeholder="Tafuta jengo au huduma">
+  <datalist id="opts"></datalist>
+  <div class="actions"><button id="gps">◎ Eneo langu</button><button class="secondary" id="search">Tafuta</button></div>
+  <label for="lang">Lugha / Language</label>
+  <select id="lang"><option value="sw">Kiswahili</option><option value="en">English</option></select>
+  <p class="hint">GPS inahitaji HTTPS na ruhusa ya kifaa. Majina ya maeneo yameorodheshwa lakini koordineti na picha ziko wazi hadi zithibitishwe. Njia za watembea kwa miguu hazijawezeshwa katika toleo hili.</p>
+  <div class="entries" id="entries">Inapakia maeneo…</div>
+</section>
+<section class="mapbox">
+  <div id="map"></div>
+  <div class="tools">
+    <button class="secondary" id="sat">Satellite</button>
+    <button class="secondary" id="tilt">3D / Tilt</button>
+    <button class="secondary" id="north">North</button>
+    <button class="secondary" id="plus">＋</button>
+    <button class="secondary" id="minus">－</button>
+  </div>
+  <div class="status" id="status">Ramani inafunguka…</div>
+</section>
+</main>
+<div class="modal" id="modal">
+  <div class="card">
+    <img id="photo" style="display:none" alt="Picha ya eneo">
+    <h3 id="title"></h3><p id="desc"></p>
+    <button class="secondary" id="close">Funga</button>
+  </div>
+</div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+"use strict";
+/* Optional Supabase connection: use only project URL and public publishable key. Never use service_role. */
+const SUPABASE_URL = "";
+const SUPABASE_PUBLISHABLE_KEY = "";
+
+let items = [], lang = "sw", gpsMarker = null, destMarker = null, satellite = false;
+const $ = id => document.getElementById(id);
+const say = message => { $("status").textContent = message; };
+
+function initMap() {
+  if (!window.maplibregl) {
+    say("Ramani haijapakia. Angalia intaneti kisha refresh.");
+    return null;
+  }
+  const map = new maplibregl.Map({
+    container: "map",
+    style: "https://tiles.openfreemap.org/styles/liberty",
+    center: [39.205, -6.773],
+    zoom: 14.2
+  });
+  map.addControl(new maplibregl.NavigationControl({visualizePitch:true}), "bottom-right");
+  map.on("load", () => say("Ramani iko tayari. Tafuta eneo au tumia GPS."));
+  map.on("error", event => {
+    console.error("Map error:", event && event.error ? event.error : event);
+    say("Ramani haijapakia kikamilifu. Hakikisha intaneti inafanya kazi.");
+  });
+  return map;
+}
+const map = initMap();
+
+const nameOf = p => lang === "sw" ? (p.name_sw || p.name_en) : (p.name_en || p.name_sw);
+function hasCoords(p) {
+  return p.latitude != null && p.longitude != null &&
+    Number.isFinite(Number(p.latitude)) && Number.isFinite(Number(p.longitude));
+}
+function openPlace(p) {
+  $("dest").value = nameOf(p);
+  if (map && hasCoords(p)) {
+    if (destMarker) destMarker.remove();
+    destMarker = new maplibregl.Marker({color:"#1264c5"})
+      .setLngLat([Number(p.longitude), Number(p.latitude)]).addTo(map);
+    map.flyTo({center:[Number(p.longitude), Number(p.latitude)], zoom:17});
+  }
+  $("title").textContent = nameOf(p);
+  $("desc").textContent = p.description_sw || p.description_en || "Taarifa za eneo.";
+  if (p.photo_url) {
+    $("photo").src = p.photo_url;
+    $("photo").style.display = "block";
+  } else {
+    $("photo").style.display = "none";
+    $("photo").removeAttribute("src");
+  }
+  $("modal").classList.add("open");
+  say(hasCoords(p) ? "Eneo limewekwa kwenye ramani." : "Eneo limechaguliwa; koordineti hazijathibitishwa.");
+}
+function render() {
+  const list = $("entries"), opts = $("opts");
+  list.innerHTML = "";
+  opts.innerHTML = "";
+  if (!items.length) {
+    list.textContent = "Hakuna maeneo yaliyopatikana kwenye data.";
+    return;
+  }
+  items.forEach(p => {
+    const option = document.createElement("option");
+    option.value = nameOf(p);
+    opts.append(option);
+    const entry = document.createElement("div");
+    entry.className = "entry";
+    const bold = document.createElement("b");
+    bold.textContent = nameOf(p);
+    const small = document.createElement("small");
+    small.textContent = (p.category || "Eneo") + " · " + (hasCoords(p) ? "Koordineti zipo" : "Inahitaji uhakiki");
+    entry.append(bold, small);
+    entry.onclick = () => openPlace(p);
+    list.append(entry);
+    if (map && hasCoords(p)) {
+      const marker = document.createElement("div");
+      marker.style.cssText = "width:17px;height:17px;border:3px solid white;border-radius:50%;background:#f2b632";
+      const pin = new maplibregl.Marker({element:marker})
+        .setLngLat([Number(p.longitude), Number(p.latitude)]).addTo(map);
+      pin.getElement().onclick = () => openPlace(p);
+    }
+  });
+}
+async function loadPlaces() {
+  try {
+    let response;
+    if (SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY) {
+      const base = SUPABASE_URL.replace(/\/$/, "");
+      const url = base + "/rest/v1/campus_places?select=*&status=eq.published&is_verified=eq.true";
+      response = await fetch(url, {
+        headers: { apikey:SUPABASE_PUBLISHABLE_KEY, Authorization:"Bearer " + SUPABASE_PUBLISHABLE_KEY }
+      });
+    } else {
+      response = await fetch("./udsm_mlimani_data.json", {cache:"no-store"});
+    }
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    const data = await response.json();
+    if (!Array.isArray(data)) throw new Error("Data format is not a JSON array");
+    items = data;
+    render();
+    say("Maeneo " + items.length + " yamepakiwa.");
+  } catch (error) {
+    console.error("Places loading error:", error);
+    $("entries").textContent = "Imeshindikana kupakia data. Hakikisha udsm_mlimani_data.json ipo pamoja na navigator.html.";
+    say("Tatizo la kupakia data. Jaribu refresh.");
+  }
+}
+$("gps").onclick = () => {
+  if (!navigator.geolocation) { say("GPS haipatikani kwenye kifaa hiki."); return; }
+  say("Inaomba ruhusa ya GPS…");
+  navigator.geolocation.getCurrentPosition(position => {
+    const coords = [position.coords.longitude, position.coords.latitude];
+    $("origin").value = position.coords.latitude.toFixed(6) + ", " + position.coords.longitude.toFixed(6);
+    if (map) {
+      if (gpsMarker) gpsMarker.remove();
+      const dot = document.createElement("div");
+      dot.style.cssText = "width:19px;height:19px;border:4px solid white;border-radius:50%;background:#1687ff;box-shadow:0 0 0 7px #1687ff35";
+      gpsMarker = new maplibregl.Marker({element:dot}).setLngLat(coords).addTo(map);
+      map.flyTo({center:coords, zoom:17});
+    }
+    say("Eneo lako limepatikana.");
+  }, () => say("GPS haikupatikana. Ruhusu Location kisha ujaribu tena."), {
+    enableHighAccuracy:true, timeout:15000
+  });
+};
+function searchPlace() {
+  const query = $("dest").value.toLowerCase().trim();
+  const place = items.find(p => [p.name_en,p.name_sw,p.id].filter(Boolean)
+    .some(value => String(value).toLowerCase().includes(query)));
+  if (place) openPlace(place);
+  else say("Hakuna eneo linalolingana.");
+}
+$("search").onclick = searchPlace;
+$("dest").onkeydown = event => { if (event.key === "Enter") searchPlace(); };
+$("lang").onchange = event => { lang = event.target.value; render(); };
+$("sat").onclick = () => {
+  if (!map) return;
+  satellite = !satellite;
+  if (satellite) {
+    if (!map.getSource("esri")) {
+      map.addSource("esri", {type:"raster", tiles:["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"], tileSize:256, attribution:"Tiles © Esri"});
+      map.addLayer({id:"esri-layer", type:"raster", source:"esri"});
+    }
+    $("sat").textContent = "Street map";
+  } else {
+    if (map.getLayer("esri-layer")) map.removeLayer("esri-layer");
+    $("sat").textContent = "Satellite";
+  }
+};
+$("tilt").onclick = () => { if (map) map.easeTo({pitch:map.getPitch()>20?0:55,duration:600}); };
+$("north").onclick = () => { if (map) map.easeTo({bearing:0,pitch:0}); };
+$("plus").onclick = () => { if (map) map.zoomIn(); };
+$("minus").onclick = () => { if (map) map.zoomOut(); };
+$("close").onclick = () => $("modal").classList.remove("open");
+$("modal").onclick = event => { if (event.target === $("modal")) $("modal").classList.remove("open"); };
+
+loadPlaces();
+</script>
+</body>
+</html>
